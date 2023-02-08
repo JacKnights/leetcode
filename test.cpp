@@ -448,4 +448,58 @@ int main() {
         nums = {2, 1};
         printf("jump: %d\n", s.jump(nums));
     }
+
+    {
+        printf("isMatch: %d\n", s.isMatch("abcde", "*a*e"));
+        printf("isMatch: %d\n", s.isMatch("abcde", "*a"));
+        printf("isMatch: %d\n", s.isMatch("abcde", "*e"));
+        printf("isMatch: %d\n", s.isMatch("abcde", "**e"));
+        printf("isMatch: %d\n", s.isMatch("abcde", "**"));
+    }
+
+    {
+        printf("uniquePaths: %d\n", s.uniquePaths(3, 2));
+        printf("uniquePaths: %d\n", s.uniquePaths(3, 7));
+    }
+
+    {
+        vector<vector<int>> obstacleGrid;
+
+        obstacleGrid = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}};
+        printf("uniquePathsWithObstacles: %d\n", s.uniquePathsWithObstacles(obstacleGrid));
+
+        obstacleGrid = {{0, 1}, {0, 0}};
+        printf("uniquePathsWithObstacles: %d\n", s.uniquePathsWithObstacles(obstacleGrid));
+
+        obstacleGrid = {{0, 1, 0, 0, 0}, { 1, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }};
+        printf("uniquePathsWithObstacles: %d\n", s.uniquePathsWithObstacles(obstacleGrid));
+
+        obstacleGrid = {{1, 0}, {0, 0}};
+        printf("uniquePathsWithObstacles: %d\n", s.uniquePathsWithObstacles(obstacleGrid));
+
+        obstacleGrid = {{0, 0}, {1, 1}, {0, 0}};
+        printf("uniquePathsWithObstacles: %d\n", s.uniquePathsWithObstacles(obstacleGrid));
+    }
+
+    {
+        vector<vector<int>> grid;
+
+        grid = { { 1, 3, 1 }, { 1, 5, 1 }, { 4, 2, 1 } };
+        printf("minPathSum: %d\n", s.minPathSum(grid));
+    }
+
+    {
+        vector<vector<int>> grid;
+
+        grid = { { 1, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 2, -1 } };
+        printf("uniquePathsIII: %d\n", s.uniquePathsIII(grid));
+
+        grid = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 2}};
+        printf("uniquePathsIII: %d\n", s.uniquePathsIII(grid));
+    }
+
+    {
+        printf("numDecodings: %d\n", s.numDecodings("12"));
+        printf("numDecodings: %d\n", s.numDecodings("226"));
+    }
 }

@@ -1209,23 +1209,175 @@ class Solution {
         }
         return dp[len - 1];
 
-        // int jumps = 0, curEnd = 0, curFarthest = 0;
+        // // best
+        // int jumps = 0, curEnd = 0, last = 0;
         // for (int i = 0; i < nums.size() - 1; i++) {
-        //     curFarthest = max(curFarthest, i + nums[i]);
+        //     last = max(last, i + nums[i]);
         //     if (i == curEnd) {
         //         jumps++;
-        //         curEnd = curFarthest;
+        //         curEnd = last;
         //     }
         // }
         // return jumps;
     }
-};
 
-// Input
-// root =
-// [146,71,-13,55,null,231,399,321,null,null,null,null,null,-33]
-// 1803 / 1919 testcases passed
-// Output
-// [146,71,-13,55,null,321,399,231,null,null,null,null,null,-33]
-// Expected
-// [146,71,321,55,null,231,399,-13,null,null,null,null,null,-33]
+    // wildcard matching
+    bool isMatch(string s, string p) {
+        vector<vector<int>> dp(s.size() + 1, vector<int>(p.size() + 1, false));
+        dp[0][0] = true;
+        for (int j = 0; j < p.size() && p[j] == '*'; j++) {
+            dp[0][j + 1] = true;
+        }
+
+        for (int i = 0; i < s.size(); i++) {
+            for (int j = 0; j < p.size(); j++) {
+                if (p[j] == '*') {
+                    dp[i + 1][j + 1] = dp[i][j + 1] || dp[i + 1][j] || dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = (s[i] == p[j] || p[j] == '?') && dp[i][j];
+                }
+            }
+        }
+
+        return dp[s.size()][p.size()];
+    }
+    
+    int uniquePaths(int m, int n) {
+        if (m < 1 || n < 1) {
+            return 0;
+        }
+        if (m == 1 || n == 1) {
+            return 1;
+        }
+        // vector<vector<int>> dp(m, vector<int>(n, 1));
+        // for (int i = 1; i < m; i++) {
+        //     for (int j = 1; j < n; j++) {
+        //         dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        //     }
+        // }
+        // return dp[m - 1][n - 1];
+        vector<int> dp(n, 1);
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] += dp[j - 1];
+            }
+        }
+        return dp[n - 1];
+    }
+    
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int m = obstacleGrid.size();
+        if (m < 1) {
+            return 0;
+        }
+        int n = obstacleGrid[0].size();
+        if (n < 1) {
+            return 0;
+        }
+        vector<int> pre(n, 0);
+        for (int i = 0; i < m; i++) {
+            vector<int> cur(n, 0);
+            if (!obstacleGrid[i][0] && (pre[0] > 0 || i == 0)) {
+                cur[0] = 1;
+            }
+            for (int j = 1; j < n; j++) {
+                cur[j] = !obstacleGrid[i][j] ? cur[j - 1] + pre[j] : 0;
+            }
+            swap(pre, cur);
+        }
+        return pre[n - 1];
+    }
+
+    int uniquePathsIIIDFS(vector<vector<int>>& grid, int m, int n, int empty, int x, int y, int step) {
+        if (grid[x][y] == -1) {
+            return 0;
+        }
+        if (grid[x][y] == 2) {
+            return empty == step ? 1 : 0;
+        }
+        grid[x][y] = -1;
+        int res = 0;
+        if (x - 1 >= 0) {
+            res += uniquePathsIIIDFS(grid, m, n, empty, x - 1, y, step + 1);
+        }
+        if (y - 1 >= 0) {
+            res += uniquePathsIIIDFS(grid, m, n, empty, x, y - 1, step + 1);
+        }
+        if (x + 1 < m) {
+            res += uniquePathsIIIDFS(grid, m, n, empty, x + 1, y, step + 1);
+        }
+        if (y + 1 < n) {
+            res += uniquePathsIIIDFS(grid, m, n, empty, x, y + 1, step + 1);
+        }
+        grid[x][y] = 0;
+        return res;
+    }
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        int m = grid.size();
+        if (m < 1) {
+            return 0;
+        }
+        int n = grid[0].size();
+        if (n < 1) {
+            return 0;
+        }
+        int st_x, st_y;
+        int empty = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    st_x = i;
+                    st_y = j;
+                } else if (grid[i][j] != -1) {
+                    empty++;
+                }
+            }
+        }
+        return uniquePathsIIIDFS(grid, m, n, empty, st_x, st_y, 0);
+    }
+
+    int minPathSum(vector<vector<int>>& grid) {
+        int m = grid.size();
+        if (m < 1) {
+            return 0;
+        }
+        int n = grid[0].size();
+        if (n < 1) {
+            return 0;
+        }
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        dp[0][0] = grid[0][0];
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = dp[i - 1][0] + grid[i][0];
+        }
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = dp[0][j - 1] + grid[0][j];
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    int numDecodings(string s) {
+        vector<int> dp(s.length(), 0);
+        if (s[0] <= '9' && s[0] >= '1') {
+            dp[0] = 1;
+        }
+        for (int i = 1; i < s.length(); i++) {
+            if (s[i] <= '9' && s[i] >= '1') {
+                dp[i] += dp[i - 1];
+            }
+            if (i > 0 && s[i - 1] != '0') {
+                int num = atoi(s.substr(i - 1, 2).c_str());
+                if (num <= 26 && num > 0) {
+                    dp[i] += (i > 1 ? dp[i - 2] : 1);
+                }
+            }
+            
+        }
+        return dp[s.length() - 1];
+    }
+};
