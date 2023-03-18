@@ -250,7 +250,7 @@ int main() {
         root = new TreeNode(1, new TreeNode(2, new TreeNode(3, new TreeNode(4), new TreeNode(5)), nullptr), nullptr);
         res = s.printTree(root);
         printVectorString2D(res);
-        
+
         root = new TreeNode(1, nullptr, new TreeNode(2));
         res = s.printTree(root);
         printVectorString2D(res);
@@ -410,7 +410,7 @@ int main() {
     {
         vector<int> prices;
 
-        prices = {3,3,5,0,0,3,1,4};
+        prices = {3, 3, 5, 0, 0, 3, 1, 4};
         printf("maxProfit3: %d\n", s.maxProfit3(prices));
 
         prices = {1, 2, 3, 4, 5};
@@ -471,7 +471,7 @@ int main() {
         obstacleGrid = {{0, 1}, {0, 0}};
         printf("uniquePathsWithObstacles: %d\n", s.uniquePathsWithObstacles(obstacleGrid));
 
-        obstacleGrid = {{0, 1, 0, 0, 0}, { 1, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }};
+        obstacleGrid = {{0, 1, 0, 0, 0}, {1, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
         printf("uniquePathsWithObstacles: %d\n", s.uniquePathsWithObstacles(obstacleGrid));
 
         obstacleGrid = {{1, 0}, {0, 0}};
@@ -484,14 +484,14 @@ int main() {
     {
         vector<vector<int>> grid;
 
-        grid = { { 1, 3, 1 }, { 1, 5, 1 }, { 4, 2, 1 } };
+        grid = {{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
         printf("minPathSum: %d\n", s.minPathSum(grid));
     }
 
     {
         vector<vector<int>> grid;
 
-        grid = { { 1, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 2, -1 } };
+        grid = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 2, -1}};
         printf("uniquePathsIII: %d\n", s.uniquePathsIII(grid));
 
         grid = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 2}};
@@ -501,5 +501,78 @@ int main() {
     {
         printf("numDecodings: %d\n", s.numDecodings("12"));
         printf("numDecodings: %d\n", s.numDecodings("226"));
+    }
+
+    {
+        ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4))));
+        printf("swapPairs: \n");
+        vector<int> vec = s.getLinkedList(s.swapPairs(head));
+        printVectorInt(vec, vec.size());
+    }
+
+    {
+        ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4))));
+        printf("removeNthFromEnd: \n");
+        {
+            vector<int> vec = s.getLinkedList(s.removeNthFromEnd(head, 4));
+            printVectorInt(vec, vec.size());
+        }
+        {
+            vector<int> vec = s.getLinkedList(s.removeNthFromEnd(head, 1));
+            printVectorInt(vec, vec.size());
+        }
+    }
+
+    {
+        ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4))));
+        printf("rotateRight: \n");
+        vector<int> vec = s.getLinkedList(s.rotateRight(head, 2));
+        printVectorInt(vec, vec.size());
+    }
+
+    {
+        ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4))));
+        printf("reverseList: \n");
+        vector<int> vec = s.getLinkedList(s.reverseList(head));
+        printVectorInt(vec, vec.size());
+    }
+
+    {
+        ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))));
+        printf("reverseBetween: \n");
+        vector<int> vec = s.getLinkedList(s.reverseBetween(head, 2, 4));
+        printVectorInt(vec, vec.size());
+    }
+
+    {
+        ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))));
+        printf("reorderList: \n");
+        s.reorderList(head);
+        vector<int> vec = s.getLinkedList(head);
+        printVectorInt(vec, vec.size());
+    }
+
+    {
+        ListNode* head = new ListNode(1);
+        printf("reorderList: \n");
+        s.reorderList(head);
+        vector<int> vec = s.getLinkedList(head);
+        printVectorInt(vec, vec.size());
+    }
+
+    {
+        ListNode* head = nullptr;
+        printf("reorderList: \n");
+        s.reorderList(head);
+        vector<int> vec = s.getLinkedList(head);
+        printVectorInt(vec, vec.size());
+    }
+
+    {
+        ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5, new ListNode(6))))));
+        printf("reorderList: \n");
+        s.reorderList(head);
+        vector<int> vec = s.getLinkedList(head);
+        printVectorInt(vec, vec.size());
     }
 }

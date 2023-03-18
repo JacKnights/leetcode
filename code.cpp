@@ -37,6 +37,14 @@ class Node {
     Node(int _val, Node* _left, Node* _right, Node* _next) : val(_val), left(_left), right(_right), next(_next) {}
 };
 
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+
 class Solution {
    public:
     string longestPalindrome(string s) {
@@ -758,7 +766,8 @@ class Solution {
             return NULL;
         }
         int mid = in_idx[preorder[r]];
-        TreeNode* res = new TreeNode(preorder[r], buildTreeHelper(in_idx, preorder, r + 1, mid - st, inorder, st, mid), buildTreeHelper(in_idx, preorder, r + 1 + mid - st, ed - (mid + 1), inorder, mid + 1, ed));
+        TreeNode* res =
+            new TreeNode(preorder[r], buildTreeHelper(in_idx, preorder, r + 1, mid - st, inorder, st, mid), buildTreeHelper(in_idx, preorder, r + 1 + mid - st, ed - (mid + 1), inorder, mid + 1, ed));
         return res;
     }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
@@ -769,7 +778,7 @@ class Solution {
         return buildTreeHelper(in_idx, preorder, 0, preorder.size(), inorder, 0, inorder.size());
     }
 
-    // unique binary search tree
+    // 96. unique binary search tree
     int numTrees(int n) {
         if (n < 1) {
             return 0;
@@ -804,6 +813,7 @@ class Solution {
         return res;
     }
 
+    // 95. Unique Binary Search Trees II
     vector<TreeNode*> generateTreesHelper(int st, int ed) {
         if (st > ed) {
             return {NULL};
@@ -872,6 +882,7 @@ class Solution {
         return isValidBST(root->left) && isValidBST(root->right);
     }
 
+    // 98. Validate Binary Search Tree
     bool isValidBST(TreeNode* root) {
         vector<int> inorder = inorderTraversal(root);
         for (int i = 0; i < inorder.size() - 1; i++) {
@@ -1124,15 +1135,21 @@ class Solution {
         return rowIndex % 2 == 0 ? *a : *b;
     }
 
+    // 121. Best Time to Buy and Sell Stock
     int maxProfit1(vector<int>& prices) {
-        int p1 = INT_MIN;
+        if (prices.size() < 2) {
+            return 0;
+        }
+        int p1 = -prices[0];
         int p2 = 0;
-        for (int i = 0; i < prices.size(); i++) {
-            p2 = max(p2, p1 + prices[i]);
+        for (int i = 1; i < prices.size(); i++) {
             p1 = max(p1, -prices[i]);
+            p2 = max(p2, p1 + prices[i]);
         }
         return p2;
     }
+
+    // 122. Best Time to Buy and Sell Stock II
     int maxProfit2(vector<int>& prices) {
         if (prices.size() < 2) {
             return 0;
@@ -1144,6 +1161,8 @@ class Solution {
         }
         return ans;
     }
+
+    // 123. Best Time to Buy and Sell Stock III
     // dp[k, i] = max(dp[k, i-1], prices[i] - prices[j] + dp[k-1, j-1]), j=[0..i-1]
     int maxProfit3(vector<int>& prices) {
         int len = prices.size();
@@ -1153,15 +1172,15 @@ class Solution {
         int K = 2;
         vector<vector<int>> dp(K + 1, vector<int>(prices.size(), 0));
         for (int k = 1; k <= K; k++) {
-            int minCost = prices[0];
+            int minCost = -prices[0];
             for (int i = 1; i < len; i++) {
-                minCost = min(minCost, prices[i] - dp[k - 1][i - 1]);
-                dp[k][i] = max(dp[k][i - 1], prices[i] - minCost);
+                minCost = max(minCost, dp[k - 1][i - 1] - prices[i]);
+                dp[k][i] = max(dp[k][i - 1], prices[i] + minCost);
             }
         }
         return dp[K][len - 1];
     }
-    
+
     bool canJump(vector<int>& nums) {
         int len = nums.size();
         vector<bool> dp(len, false);
@@ -1241,7 +1260,7 @@ class Solution {
 
         return dp[s.size()][p.size()];
     }
-    
+
     int uniquePaths(int m, int n) {
         if (m < 1 || n < 1) {
             return 0;
@@ -1264,7 +1283,7 @@ class Solution {
         }
         return dp[n - 1];
     }
-    
+
     int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
         int m = obstacleGrid.size();
         if (m < 1) {
@@ -1376,8 +1395,188 @@ class Solution {
                     dp[i] += (i > 1 ? dp[i - 2] : 1);
                 }
             }
-            
         }
         return dp[s.length() - 1];
+    }
+
+    vector<int> getLinkedList(ListNode* head) {
+        vector<int> res;
+        while (head) {
+            res.push_back(head->val);
+            head = head->next;
+        }
+        return res;
+    }
+
+    // 21. Merge Two Sorted Lists
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        if (list1 == nullptr) {
+            return list2;
+        }
+        if (list2 == nullptr) {
+            return list1;
+        }
+        ListNode dummy;
+        ListNode* cur = &dummy;
+        while (list1 && list2) {
+            if (list1->val < list2->val) {
+                cur->next = list1;
+                list1 = list1->next;
+            } else {
+                cur->next = list2;
+                list2 = list2->next;
+            }
+            cur = cur->next;
+        }
+        if (list1) {
+            cur->next = list1;
+        } else if (list2) {
+            cur->next = list2;
+        }
+
+        return dummy.next;
+    }
+
+    // 24. Swap Nodes in Pairs
+    ListNode* swapPairs(ListNode* head) {
+        ListNode dummy;
+        ListNode* cur = &dummy;
+        while (head && head->next) {
+            ListNode* nn = head->next->next;
+            cur->next = head->next;
+            head->next->next = head;
+            head->next = nn;
+            cur = head;
+            head = head->next;
+        }
+        if (head) {
+            cur->next = head;
+        }
+        return dummy.next;
+    }
+
+    // 19. Remove Nth Node From End of List
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        int len = 0;
+        ListNode* cur = head;
+        while (cur) {
+            len++;
+            cur = cur->next;
+        }
+        int jump = len - n;
+        if (jump < 0) {
+            return head;
+        }
+        ListNode dummy(0, head);
+        cur = &dummy;
+        for (int i = 0; i < jump; i++) {
+            cur = cur->next;
+        }
+        if (cur->next) {
+            cur->next = cur->next->next;
+        }
+        return dummy.next;
+    }
+
+    // 61. Rotate List
+    ListNode* rotateRight(ListNode* head, int k) {
+        int len = 0;
+        ListNode dummy(0, head);
+        ListNode* cur = &dummy;
+        while (cur->next) {
+            len++;
+            cur = cur->next;
+        }
+        if (len == 0) {
+            return nullptr;
+        }
+        cur->next = head;  // make it circle
+        int jump = len - (k % len);
+        cur = &dummy;
+        for (int i = 0; i < jump; i++) {
+            cur = cur->next;
+        }
+        ListNode* new_head = cur->next;
+        cur->next = nullptr;  // break circle
+        return new_head;
+    }
+
+    // 206. Reverse Linked List
+    ListNode* reverseList(ListNode* head) {
+        if (!head) {
+            return nullptr;
+        }
+        ListNode* cur1 = head;
+        ListNode* cur2 = head->next;
+        cur1->next = nullptr;
+        while (cur1 && cur2) {
+            ListNode* nn = cur2->next;
+            cur2->next = cur1;
+            cur1 = cur2;
+            cur2 = nn;
+        }
+        return cur1;
+    }
+
+    // 92. Reverse Linked List II
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if (!head) {
+            return nullptr;
+        }
+        ListNode dummy(0, head);
+        ListNode *cur = &dummy;
+        for (int i = 0; i < left - 1; i++) { // find left bound to start
+            cur = cur->next;
+        }
+        ListNode *left_break = cur;
+        ListNode* cur1 = left_break->next;
+        ListNode* cur2 = left_break->next->next;
+        for (int i = 0; i < right - left; i++) { // till reach right bound
+            ListNode* nn = cur2->next;
+            cur2->next = cur1;
+            cur1 = cur2;
+            cur2 = nn;
+        }
+        left_break->next->next = cur2; // concat left_break with right_reverse
+        left_break->next = cur1;       // concat right_break with left_reverse
+        return dummy.next;
+    }
+
+    // 876. Middle of the Linked List
+    ListNode* middleNode(ListNode* head) {
+        ListNode dummy(0, head);
+        ListNode* slow = &dummy;
+        ListNode* fast = &dummy;
+        while (slow && fast) {
+            slow = slow->next;
+            fast = fast->next;
+            if (fast) {
+                fast = fast->next;
+            }
+        }
+        return slow;
+    }
+
+    // 143. Reorder List
+    void reorderList(ListNode* head) {
+        if (!head) {
+            return;
+        }
+        ListNode *mid = middleNode(head);
+        ListNode* reversed_tail = reverseList(mid);
+        ListNode *cur1 = head;
+        ListNode *cur2 = reversed_tail;
+        while (cur1 && cur2) {
+            ListNode* cur1n = cur1->next;
+            ListNode* cur2n = cur2->next;
+            if (cur2 != cur1->next) {
+                cur2->next = cur1->next;
+            }
+            if (cur1 != cur2) {
+                cur1->next = cur2;
+            }
+            cur1 = cur1n;
+            cur2 = cur2n;
+        }
     }
 };
