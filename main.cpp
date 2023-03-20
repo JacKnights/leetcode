@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "code.cpp"
+#include "lru_cache.cpp"
 #include "helper.cpp"
 
 using namespace std;
