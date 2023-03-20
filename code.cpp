@@ -50,35 +50,24 @@ struct ListNode {
 
 class Solution {
    public:
+    // 5. Longest Palindromic Substring
     string longestPalindrome(string s) {
         int len = s.size();
-        bool** dp = new bool*[len + 1];
-        for (int i = 0; i < len + 1; i++) {
-            dp[i] = new bool[len + 1];
-            for (int j = 0; j < len + 1; j++) {
-                dp[i][j] = false;
+        vector<vector<bool>> dp(len, vector<bool>(len, false));
+        for (int i = 0; i < len; i++) { // for add
+            for (int j = 0; i - j >= 0 && i + j < len; j++) {
+                if (s[i - j] != s[i + j]) {
+                    break;
+                }
+                dp[i - j][i + j] = true;
             }
         }
-
-        for (int i = 0; i < len; i++) {
-            dp[i][i] = true;
-        }
-        for (int i = 0; i < len - 1; i++) {
+        for (int i = 0; i < len; i++) { // for even
             for (int j = 0; i - j >= 0 && i + 1 + j < len; j++) {
-                if (s[i - j] == s[i + 1 + j]) {
-                    dp[i - j][i + 1 + j] = true;
-                } else {
+                if (s[i - j] != s[i + 1 + j]) {
                     break;
                 }
-            }
-        }
-        for (int i = 1; i < len - 1; i++) {
-            for (int j = 0; i - 1 - j >= 0 && i + 1 + j < len; j++) {
-                if (s[i - 1 - j] == s[i + 1 + j]) {
-                    dp[i - 1 - j][i + 1 + j] = true;
-                } else {
-                    break;
-                }
+                dp[i - j][i + 1 + j] = true;
             }
         }
 
@@ -94,11 +83,64 @@ class Solution {
         return s.substr(l, r - l + 1);
     }
 
+    // 409. Longest Palindrome
+    int longestPalindrome2(string s) {
+        unordered_map<char, int> m;
+        for (int i = 0; i < s.length(); i++) {
+            m[s[i]]++;
+        }
+        bool found_odd = false;
+        int ans = 0;
+        for (auto iter = m.begin(); iter != m.end(); iter++) {
+            if (iter->second % 2 == 0) {
+                ans += iter->second;
+            } else if (!found_odd) {
+                ans += iter->second - 1;
+                found_odd = true;
+            }
+        }
+        if (found_odd) ans++;
+        return ans;
+    }
+
+    // 9. Palindrome Number
     bool isPalindrome(int x) {
         char str[25];
         sprintf(str, "%d", x);
         string s = str;
         return longestPalindrome(s) == s;
+    }
+
+    // 516. Longest Palindromic Subsequence
+    int longestPalindromeSubseq(string s) {
+        int len = s.size();
+        vector<vector<int>> dp(len, vector<int>(len, 0));
+        for (int i = 0; i < len; i++) {
+            dp[i][i] = 1;
+        }
+        for (int i = 0; i < len; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (s[i] != s[j]) {
+                    dp[i][j] = max(dp[i][j + 1], dp[i - 1][j]);
+                } else {
+                    dp[i][j] = dp[i - 1][j + 1] + 2;
+                }
+            }
+        }
+        return dp[len - 1][0];
+    }
+
+    // 53. Maximum Subarray
+    int maxSubArray(vector<int>& nums) {
+        int len = nums.size();
+        vector<int> dp(len);
+        dp[0] = nums[0];
+        int ans = dp[0];
+        for (int i = 1; i < len; i++) {
+            dp[i] = max(dp[i - 1] + nums[i], nums[i]);
+            ans = max(ans, dp[i]);
+        }
+        return ans;
     }
 
     string intToRoman(int num) {
@@ -1650,5 +1692,28 @@ class Solution {
             res[counter++] = *iter;
         }
         return res;
+    }
+
+    // 42. Trapping Rain Water
+    int trap(vector<int>& height) {
+        int len = height.size();
+        if (len == 0) {
+            return 0;
+        }
+        vector<int> left(len);
+        vector<int> right(len);
+        left[0] = height[0];
+        right[len - 1] = height[len - 1];
+        for (int i = 1; i < len - 1; i++) {
+            left[i] = max(height[i], left[i - 1]);
+        }
+        for (int i = len - 2; i > 0; i--) {
+            right[i] = max(height[i], right[i + 1]);
+        }
+        int ans = 0;
+        for (int i = 1; i < len - 1; i++) {
+            ans += (min(left[i], right[i]) - height[i]);
+        }
+        return ans;
     }
 };
