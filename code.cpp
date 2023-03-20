@@ -379,22 +379,24 @@ class Solution {
         return res;
     }
 
+    // 31. Next Permutation
     void nextPermutation(vector<int>& nums) {
         int p = nums.size() - 1;
+        bool p_found = false;
+        // find last digit p non-desc
         for (int i = nums.size() - 1; i > 0; i--) {
             if (nums[i] > nums[i - 1]) {
                 p = i - 1;
+                p_found = true;
                 break;
-            }
-            if (i == 1) {
-                p = -1;
             }
         }
 
         int q = p;
-        if (p == -1) {
+        if (!p_found) {
             q = nums.size() - 1;
         } else {
+            // find last digit q larger than p
             for (int i = nums.size() - 1; i > p; i--) {
                 if (nums[i] > nums[p]) {
                     q = i;
@@ -403,6 +405,7 @@ class Solution {
             }
             swap(nums[p], nums[q]);
         }
+        // reverse between (p, end)
         for (int i = p + 1, j = nums.size() - 1; i <= j; i++, j--) {
             swap(nums[i], nums[j]);
         }
@@ -885,48 +888,6 @@ class Solution {
         return generateTreesHelper(1, n);
     }
 
-    // wrong
-    bool isValidBST_wrong(TreeNode* root) {
-        stack<TreeNode*> st;
-        TreeNode* cur = root;
-        while (!st.empty() || cur) {
-            while (cur) {
-                st.push(cur);
-                if (cur->left) {
-                    if (cur->val <= cur->left->val) {
-                        return false;
-                    }
-                }
-                cur = cur->left;
-            }
-            cur = st.top();
-            st.pop();
-            if (cur->right) {
-                if (cur->val >= cur->right->val) {
-                    return false;
-                }
-            }
-            cur = cur->right;
-        }
-        return true;
-    }
-    bool isValidBST_wrong2(TreeNode* root) {
-        if (!root) {
-            return true;
-        }
-        if (root->left) {
-            if (root->val <= root->left->val) {
-                return false;
-            }
-        }
-        if (root->right) {
-            if (root->val >= root->right->val) {
-                return false;
-            }
-        }
-        return isValidBST(root->left) && isValidBST(root->right);
-    }
-
     // 98. Validate Binary Search Tree
     bool isValidBST(TreeNode* root) {
         vector<int> inorder = inorderTraversal(root);
@@ -938,6 +899,7 @@ class Solution {
         return true;
     }
 
+    // 99. Recover Binary Search Tree
     TreeNode* findMaxOrMinVal(vector<TreeNode*> ns, bool is_max) {
         TreeNode* res = nullptr;
         for (int i = 0; i < ns.size(); i++) {
@@ -995,68 +957,6 @@ class Solution {
             cur = cur->right;
         }
     }
-
-    // TreeNode* findMaxOrMinVal(vector<TreeNode*> ns, bool is_max) {
-    //     TreeNode* res = nullptr;
-    //     for (int i = 0; i < ns.size(); i++) {
-    //         if (ns[i]) {
-    //             if (!res || (is_max && res->val < ns[i]->val) || (!is_max && res->val > ns[i]->val)) {
-    //                 res = ns[i];
-    //             }
-    //         }
-    //     }
-    //     return res;
-    // }
-    // TreeNode* maxMinVal(map<TreeNode*, vector<TreeNode*>*>& min_max_map, TreeNode* root, bool is_max) {
-    //     if (min_max_map.find(root) == min_max_map.end()) {
-    //         min_max_map[root] = new vector<TreeNode*>{nullptr, nullptr};
-    //     }
-    //     TreeNode* left = nullptr;
-    //     if (root->left) {
-    //         if (min_max_map.find(root->left) != min_max_map.end()) {
-    //             auto cache = (*min_max_map[root->left])[is_max ? 1 : 0];
-    //             printf("cache find%d: %d %d\n", is_max, root->left, root->left->val);
-    //             if (cache) {
-    //                 left = cache;
-    //                 printf("cache hit\n");
-    //             } else {
-    //                 left = maxMinVal(min_max_map, root->left, is_max);
-    //             }
-    //         } else {
-    //             left = maxMinVal(min_max_map, root->left, is_max);
-    //         }
-    //     }
-    //     TreeNode* right = nullptr;
-    //     if (root->right) {
-    //         if (min_max_map.find(root->right) != min_max_map.end()) {
-    //             auto cache = (*min_max_map[root->right])[is_max ? 1 : 0];
-    //             printf("cache find%d: %d %d\n", is_max, root->right, root->right->val);
-    //             if (cache) {
-    //                 right = cache;
-    //                 printf("cache hit\n");
-    //             } else {
-    //                 right = maxMinVal(min_max_map, root->right, is_max);
-    //             }
-    //         } else {
-    //             right = maxMinVal(min_max_map, root->right, is_max);
-    //         }
-    //     }
-    //     TreeNode* res = findMaxOrMinVal({root, left, right}, is_max);
-    //     if (is_max) {
-    //         if (!(*min_max_map[root])[1] || (*min_max_map[root])[1]->val < res->val) {
-    //             (*min_max_map[root])[1] = res;
-    //             // printf("cache set0: %d %d\n", root, root->val);
-    //             printf("cache set1: %d %d\n", res, res->val);
-    //         }
-    //     } else {
-    //         if (!(*min_max_map[root])[0] || (*min_max_map[root])[0]->val > res->val) {
-    //             (*min_max_map[root])[0] = res;
-    //             // printf("cache set0: %d %d\n", root, root->val);
-    //             printf("cache set0: %d %d\n", res, res->val);
-    //         }
-    //     }
-    //     return res;
-    // }
 
     vector<vector<int>> levelOrder(TreeNode* root) {
         vector<vector<int>> ans;
@@ -1226,28 +1126,17 @@ class Solution {
         return dp[K][len - 1];
     }
 
+    // 55. Jump Game
     bool canJump(vector<int>& nums) {
         int len = nums.size();
-        vector<bool> dp(len, false);
-        dp[0] = true;
-        for (int i = 1; i < len; i++) {
-            for (int j = i - 1; j >= 0; j--) {
-                if (dp[j] && i - j <= nums[j]) {
-                    dp[i] = true;
-                    break;
-                }
-            }
+        int last = 0;
+        for (int i = 0; i < len && i <= last; i++) {
+            last = max(last, i + nums[i]);
         }
-        return dp[len - 1];
-
-        // // best
-        // int len = nums.size();
-        // int last = 0;
-        // for (int i = 0; i < len && i <= last; i++) {
-        //     last = max(last, i + nums[i]);
-        // }
-        // return last >= len - 1;
+        return last >= len - 1;
     }
+
+    // 45. Jump Game II
     int jump(vector<int>& nums) {
         int len = nums.size();
         if (len <= 1) {
@@ -1306,12 +1195,10 @@ class Solution {
         return dp[s.size()][p.size()];
     }
 
+    // 62. Unique Paths
     int uniquePaths(int m, int n) {
         if (m < 1 || n < 1) {
             return 0;
-        }
-        if (m == 1 || n == 1) {
-            return 1;
         }
         // vector<vector<int>> dp(m, vector<int>(n, 1));
         // for (int i = 1; i < m; i++) {
@@ -1329,6 +1216,7 @@ class Solution {
         return dp[n - 1];
     }
 
+    // 63. Unique Paths II
     int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
         int m = obstacleGrid.size();
         if (m < 1) {
@@ -1352,6 +1240,7 @@ class Solution {
         return pre[n - 1];
     }
 
+    // 980. Unique Paths III
     int uniquePathsIIIDFS(vector<vector<int>>& grid, int m, int n, int empty, int x, int y, int step) {
         if (grid[x][y] == -1) {
             return 0;
