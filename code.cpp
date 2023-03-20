@@ -3,13 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <map>
-#include <queue>
-#include <set>
-#include <stack>
 #include <string>
-#include <unordered_set>
 #include <vector>
+#include <list>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <stack>
+#include <queue>
+#include <algorithm>
 #include "helper.cpp"
 
 using namespace std;
@@ -1524,21 +1527,21 @@ class Solution {
             return nullptr;
         }
         ListNode dummy(0, head);
-        ListNode *cur = &dummy;
-        for (int i = 0; i < left - 1; i++) { // find left bound to start
+        ListNode* cur = &dummy;
+        for (int i = 0; i < left - 1; i++) {  // find left bound to start
             cur = cur->next;
         }
-        ListNode *left_break = cur;
+        ListNode* left_break = cur;
         ListNode* cur1 = left_break->next;
         ListNode* cur2 = left_break->next->next;
-        for (int i = 0; i < right - left; i++) { // till reach right bound
+        for (int i = 0; i < right - left; i++) {  // till reach right bound
             ListNode* nn = cur2->next;
             cur2->next = cur1;
             cur1 = cur2;
             cur2 = nn;
         }
-        left_break->next->next = cur2; // concat left_break with right_reverse
-        left_break->next = cur1;       // concat right_break with left_reverse
+        left_break->next->next = cur2;  // concat left_break with right_reverse
+        left_break->next = cur1;        // concat right_break with left_reverse
         return dummy.next;
     }
 
@@ -1562,10 +1565,10 @@ class Solution {
         if (!head) {
             return;
         }
-        ListNode *mid = middleNode(head);
+        ListNode* mid = middleNode(head);
         ListNode* reversed_tail = reverseList(mid);
-        ListNode *cur1 = head;
-        ListNode *cur2 = reversed_tail;
+        ListNode* cur1 = head;
+        ListNode* cur2 = reversed_tail;
         while (cur1 && cur2) {
             ListNode* cur1n = cur1->next;
             ListNode* cur2n = cur2->next;
@@ -1578,5 +1581,106 @@ class Solution {
             cur1 = cur1n;
             cur2 = cur2n;
         }
+    }
+
+    // 3. Longest Substring Without Repeating Characters
+    int lengthOfLongestSubstring(string s) {
+        unordered_set<char> us;
+        int start = 0, ans = 0;
+        for (int i = 0; i < s.length(); i++) {
+            us.insert(s[i]);
+            int window = i - start + 1;
+            if (us.size() == window) {
+                ans = max(ans, window);
+                continue;
+            }
+            while (us.size() < window) {
+                if (s[start] != s[i]) { // leave current in set
+                    us.erase(s[start]);
+                }
+                start++;
+            }
+        }
+        return ans;
+    }
+
+    // 215. Kth Largest Element in an Array
+    int findKthLargest(vector<int>& nums, int k) {
+        const int MAX_SIZE = 20001;
+        vector<int> bucket(MAX_SIZE, 0);
+        for (int i = 0; i < nums.size(); i++) {
+            bucket[nums[i] + 10000]++;
+        }
+        int counter = 0;
+        int res = 0;
+        for (int i = MAX_SIZE - 1; i >= 0; i--) {
+            if (bucket[i] + counter < k) {
+                counter += bucket[i];
+            } else {
+                res = i - 10000;
+                break;
+            }
+        }
+        return res;
+    }
+
+    // 15. 3Sum
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        set<vector<int>> us;
+        for (int i = 0; i < nums.size(); i++) {
+            int j = i + 1;
+            int k = nums.size() - 1;
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+                if (sum == 0) {
+                    us.insert({nums[i], nums[j], nums[k]});
+                    j++;
+                    k--;
+                } else if (sum > 0) {
+                    k--;
+                } else if (sum < 0) {
+                    j++;
+                }
+            }
+        }
+        vector<vector<int>> res(us.size());
+        int counter = 0;
+        for (auto iter = us.begin(); iter != us.end(); iter++) {
+            res[counter++] = *iter;
+        }
+        return res;
+    }
+};
+
+class LRUCache {
+    unordered_map<int, list<pair<int, int>>::iterator> m_idx;
+    list<pair<int, int>> m_data;
+    int m_cap;
+
+   public:
+    LRUCache(int capacity) { m_cap = capacity; }
+
+    int get(int key) {
+        if (m_idx.find(key) == m_idx.end()) {
+            return -1;
+        }
+        int val = m_idx[key]->second;
+        m_data.erase(m_idx[key]);
+        m_data.push_front(make_pair(key, val));
+        m_idx[key] = m_data.begin();
+        return val;
+    }
+
+    void put(int key, int value) {
+        if (m_idx.find(key) != m_idx.end()) {
+            m_data.erase(m_idx[key]);
+        } else if (m_data.size() >= this->m_cap) {
+            auto back = m_data.back();
+            m_idx.erase(back.first);
+            m_data.pop_back();
+        }
+        m_data.push_front(make_pair(key, value));
+        m_idx[key] = m_data.begin();
     }
 };
