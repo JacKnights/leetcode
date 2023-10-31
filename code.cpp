@@ -92,6 +92,7 @@ class Solution {
     }
 
     // 409. Longest Palindrome
+    // Given a string s which consists of lowercase or uppercase letters, return the length of the longest palindrome that can be built with those letters.
     int longestPalindrome2(string s) {
         unordered_map<char, int> m;
         for (int i = 0; i < s.length(); i++) {
@@ -121,6 +122,8 @@ class Solution {
     }
 
     // 516. Longest Palindromic Subsequence
+    // Given a string s, find the longest palindromic subsequence's length in s.
+    // A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
     int longestPalindromeSubseq(string s) {
         int len = s.size();
         vector<vector<int>> dp(len, vector<int>(len, 0));
@@ -140,6 +143,7 @@ class Solution {
     }
 
     // 53. Maximum Subarray
+    // Given an integer array nums, find the subarray with the largest sum, and return its sum.
     int maxSubArray(vector<int>& nums) {
         int len = nums.size();
         vector<int> dp(len);
@@ -217,36 +221,56 @@ class Solution {
         return res;
     }
 
+    // 13. Roman to Integer
+    int romanToInt(string s) {
+        map<char, int> vals = {
+            {'I', 1}, {'V', 5}, {'X', 10}, {'L', 50}, {'C', 100}, {'D', 500}, {'M', 1000}
+        };
+        int ans = 0;
+        for (int i = 0; i < s.size() - 1; i++) {
+            if (vals[s[i]] >= vals[s[i + 1]]) {
+                ans += vals[s[i]];
+            } else {
+                ans -= vals[s[i]];
+            }
+        }
+        ans += vals[s[s.size() - 1]];
+        return ans;
+    }
+
+    // 17. Letter Combinations of a Phone Number
     vector<string> letterCombinations(string digits) {
         map<int, vector<char>> letters = {
             {2, {'a', 'b', 'c'}}, {3, {'d', 'e', 'f'}}, {4, {'g', 'h', 'i'}}, {5, {'j', 'k', 'l'}}, {6, {'m', 'n', 'o'}}, {7, {'p', 'q', 'r', 's'}}, {8, {'t', 'u', 'v'}}, {9, {'w', 'x', 'y', 'z'}},
         };
-        vector<string> tmp;
-        // tmp.reserve(256);
+        vector<string> res;
         for (int i = 0; i < digits.size(); i++) {
             vector<char> ltr = letters[digits[i] - '0'];
 
-            if (tmp.size() == 0) {
+            if (res.size() == 0) {
+                res.reserve(ltr.size());
                 for (int j = 0; j < ltr.size(); j++) {
-                    string tmp_str;
-                    tmp_str += ltr[j];
-                    tmp.push_back(tmp_str);
+                    string res_str = string(1, ltr[j]);
+                    res.push_back(res_str);
                 }
             } else {
-                vector<string> new_tmp;
-                for (int k = 0; k < tmp.size(); k++) {
+                vector<string> new_res;
+                new_res.reserve(res.size() * ltr.size());
+                for (int k = 0; k < res.size(); k++) {
                     for (int j = 0; j < ltr.size(); j++) {
-                        string tmp_str = tmp[k] + ltr[j];
-                        new_tmp.push_back(tmp_str);
+                        string res_str = res[k] + ltr[j];
+                        new_res.push_back(res_str);
                     }
                 }
-                tmp = new_tmp;
+                res = new_res;
             }
         }
 
-        return tmp;
+        return res;
     }
 
+    // 20. Valid Parentheses
+    // Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
     bool isValid(string s) {
         stack<char> st;
         for (size_t i = 0; i < s.size(); i++) {
@@ -302,6 +326,7 @@ class Solution {
         return result;
     }
 
+    // 26. Remove Duplicates from Sorted Array
     int removeDuplicates(vector<int>& nums) {
         if (nums.size() == 0) {
             return 0;
@@ -316,6 +341,8 @@ class Solution {
         return res;
     }
 
+    // 27. Remove Element
+    // Given an integer array nums and an integer val, remove all occurrences of val in nums in-place
     int removeElement(vector<int>& nums, int val) {
         if (nums.size() == 0) {
             return 0;
@@ -328,6 +355,30 @@ class Solution {
             }
         }
         return res;
+    }
+
+    // 647. Palindromic Substrings
+    // Given a string s, return the number of palindromic substrings in it.
+    int countSubstrings(string s) {
+        int len = s.size();
+        int ans = 0;
+        for (int i = 0; i < len - 1; i++) { // even
+            for (int j = 0; i - j >= 0 && i + 1 + j < len; j++) {
+                if (s[i - j] != s[i + 1 + j]) {
+                    break;
+                }
+                ans++;
+            }
+        }
+        for (int i = 0; i < len; i++) { // odd
+            for (int j = 0; i - j >= 0 && i + j < len; j++) {
+                if (s[i - j] != s[i + j]) {
+                    break;
+                }
+                ans++;
+            }
+        }
+        return ans;
     }
 
     int strStr(string haystack, string needle) {
@@ -423,15 +474,17 @@ class Solution {
         return;
     }
 
+    // 32. Longest Valid Parentheses
+    // Given a string containing just the characters '(' and ')', return the length of the longest valid (well-formed) parentheses substring.
     int longestValidParentheses(string s) {
         int res = 0;
-        stack<int> st;
+        stack<int> st; // store the index of a potential start
         for (int i = 0; i < s.size(); i++) {
             if (s[i] == '(') {
                 st.push(i);
             } else if (s[i] == ')') {
                 if (st.empty()) {
-                    st.push(i);
+                    st.push(i); // all those before matched
                 } else {
                     if (s[st.top()] == '(') {
                         st.pop();
@@ -440,7 +493,7 @@ class Solution {
                     }
 
                     if (st.empty()) {
-                        res = i + 1;
+                        res = i + 1; // all matched
                     } else {
                         res = max(res, i - st.top());
                     }
@@ -1525,6 +1578,7 @@ class Solution {
     }
 
     // 3. Longest Substring Without Repeating Characters
+    // Given a string s, find the length of the longest substring without repeating characters.
     int lengthOfLongestSubstring(string s) {
         unordered_set<char> us;
         int start = 0, ans = 0;
@@ -1693,5 +1747,19 @@ class Solution {
             }
         }
         return reach[target];
+    }
+
+    // 2433. Find The Original Array of Prefix Xor
+    vector<int> findArray(vector<int>& pref) {
+        vector<int> res;
+        res.reserve(pref.size());
+        if (pref.empty()) {
+            return res;
+        }
+        res.push_back(pref[0]);
+        for (int i = 1; i < pref.size(); i++) {
+            res.push_back(pref[i - 1] ^ pref[i]);
+        }
+        return res;
     }
 };

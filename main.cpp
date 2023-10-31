@@ -23,6 +23,10 @@ int main(int argc, char *argv[]) {
         printf("longestPalindrome: %s\n", s.longestPalindrome("asdasdsad").c_str());
         printf("longestPalindrome: %s\n", s.longestPalindrome("ahha").c_str());
     }
+    if (args.find("countSubstrings") != args.end()) {
+        printf("countSubstrings: %d\n", s.countSubstrings("aaa"));
+        printf("countSubstrings: %d\n", s.countSubstrings("abcd"));
+    }
     if (args.find("isPalindrome") != args.end()) {
         printf("isPalindrome: %d\n", s.isPalindrome(12321));
         printf("isPalindrome: %d\n", s.isPalindrome(12));
@@ -32,6 +36,11 @@ int main(int argc, char *argv[]) {
         printf("intToRoman: %s\n", s.intToRoman(1241).c_str());
         printf("intToRoman: %s\n", s.intToRoman(1994).c_str());
         printf("intToRoman: %s\n", s.intToRoman(3999).c_str());
+    }
+    if (args.find("romanToInt") != args.end()) {
+        printf("romanToInt: %d\n", s.romanToInt("IX"));
+        printf("romanToInt: %d\n", s.romanToInt("ID"));
+        printf("romanToInt: %d\n", s.romanToInt("DVIII"));
     }
 
     if (args.find("letterCombinations") != args.end()) {
@@ -577,5 +586,11 @@ int main(int argc, char *argv[]) {
         s.reorderList(head);
         vector<int> vec = s.getLinkedList(head);
         printVectorInt(vec, vec.size());
+    }
+
+    if (args.find("findArray") != args.end()) {
+        vector<int> vec = {5, 2, 0, 3, 1};
+        auto res = s.findArray(vec);
+        printVectorInt(res, res.size());
     }
 }
