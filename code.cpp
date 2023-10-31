@@ -51,18 +51,18 @@ struct ListNode {
 class Solution {
    public:
     // 5. Longest Palindromic Substring
+    // Given a string s, return the longest palindromic substring in s.
     string longestPalindrome(string s) {
         int len = s.size();
-        vector<vector<bool>> dp(len, vector<bool>(len, false));
-        for (int i = 0; i < len; i++) { // for add
-            for (int j = 0; i - j >= 0 && i + j < len; j++) {
-                if (s[i - j] != s[i + j]) {
-                    break;
-                }
-                dp[i - j][i + j] = true;
+        bool** dp = new bool*[len];
+        for (int i = 0; i < len; i++) { // init
+            dp[i] = new bool[len];
+            for (int j = 0; j < len; j++) {
+                dp[i][j] = false;
             }
         }
-        for (int i = 0; i < len; i++) { // for even
+
+        for (int i = 0; i < len - 1; i++) { // even
             for (int j = 0; i - j >= 0 && i + 1 + j < len; j++) {
                 if (s[i - j] != s[i + 1 + j]) {
                     break;
@@ -70,13 +70,21 @@ class Solution {
                 dp[i - j][i + 1 + j] = true;
             }
         }
-
+        for (int i = 0; i < len; i++) { // odd
+            for (int j = 0; i - j >= 0 && i + j < len; j++) {
+                if (s[i - j] != s[i + j]) {
+                    break;
+                }
+                dp[i - j][i + j] = true;
+            }
+        }
         int l = 0, r = 0;
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len; j++) {
+        for (int i = 0; i < len; i++) { // find longest
+            for (int j = len - 1; j >= 0; j--) {
                 if (dp[i][j] && j - i > r - l) {
                     l = i;
                     r = j;
+                    break;
                 }
             }
         }
@@ -104,6 +112,7 @@ class Solution {
     }
 
     // 9. Palindrome Number
+    // Given an integer x, return true if x is a palindrome, and false otherwise.
     bool isPalindrome(int x) {
         char str[25];
         sprintf(str, "%d", x);
@@ -143,6 +152,7 @@ class Solution {
         return ans;
     }
 
+    // 12. Integer to Roman
     string intToRoman(int num) {
         vector<int> vals{1, 5, 10, 50, 100, 500, 1000};
         vector<char> syms{'I', 'V', 'X', 'L', 'C', 'D', 'M'};
