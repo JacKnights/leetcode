@@ -1605,4 +1605,83 @@ class Solution {
         }
         return ans;
     }
+
+    // 494. Target Sum
+    int findTargetSumWays(vector<int>& nums, int S) {
+        int len = nums.size();
+        if (len == 0) {
+            return 0;
+        }
+        int sum = 0;
+        for (int i = len - 1; i >= 0; i--) {
+            sum += nums[i];
+        }
+        if (S > sum || S < -sum) {
+            return 0;
+        }
+        vector<vector<int>> dp;
+        dp.resize(len, vector<int>(2 * sum + 1, 0));
+        dp[0][sum + nums[0]]++;
+        dp[0][sum - nums[0]]++;
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j < 2 * sum + 1; j++) {
+                if (j + nums[i] < 2 * sum + 1) {
+                    dp[i][j + nums[i]] += dp[i - 1][j];
+                }
+                if (j - nums[i] >= 0) {
+                    dp[i][j - nums[i]] += dp[i - 1][j];
+                }
+            }
+        }
+        return dp[len - 1][sum + S];
+    }
+
+    // 322. Coin Change
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> dp(amount + 1, -1);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.size(); j++) {
+                if (i >= coins[j]) {
+                    if ((dp[i] == -1 || dp[i] > dp[i - coins[j]] + 1) && dp[i - coins[j]] != -1) {
+                        dp[i] = dp[i - coins[j]] + 1;
+                    }
+                }
+            }
+        }
+        return dp[amount];
+    }
+
+    // 279. Perfect Squares
+    int numSquares(int n) {
+        vector<int> dp(n + 1, INT_MAX);
+        dp[0] = 0;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j * j <= i; j++) {
+                dp[i] = min(dp[i], dp[i - j * j] + 1);
+            }
+        }
+        return dp[n];
+    }
+
+    // 416. Partition Equal Subset Sum
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+        }
+        if (sum % 2 == 1) {
+            return false;
+        }
+        int target = sum / 2;
+        vector<bool> reach(target + 1, false);
+        reach[0] = true;
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = target - nums[i]; j >= 0; j--) {
+                reach[j + nums[i]] = reach[j + nums[i]] || reach[j];
+            }
+        }
+        return reach[target];
+    }
 };
