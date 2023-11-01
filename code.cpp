@@ -394,6 +394,10 @@ class Solution {
         return res;
     }
 
+    // 30. Substring with Concatenation of All Words
+    // You are given a string s and an array of strings words. All the strings of words are of the same length.
+    // A concatenated substring in s is a substring that contains all the strings of any permutation of words concatenated.
+    // Return the starting indices of all the concatenated substrings in s. You can return the answer in any order.
     vector<int> findSubstring(string s, vector<string>& words) {
         vector<int> res;
         int ws = words.size();
@@ -441,23 +445,19 @@ class Solution {
     }
 
     // 31. Next Permutation
+    // Given an array of integers nums, find the next permutation of nums.
+    // The replacement must be in place and use only constant extra memory.
     void nextPermutation(vector<int>& nums) {
-        int p = nums.size() - 1;
-        bool p_found = false;
+        int p = -1;
         // find last digit p non-desc
         for (int i = nums.size() - 1; i > 0; i--) {
             if (nums[i] > nums[i - 1]) {
                 p = i - 1;
-                p_found = true;
                 break;
             }
         }
-
-        int q = p;
-        if (!p_found) {
-            q = nums.size() - 1;
-        } else {
-            // find last digit q larger than p
+        if (p >= 0) { // find last digit q larger than p
+            int q = p + 1;
             for (int i = nums.size() - 1; i > p; i--) {
                 if (nums[i] > nums[p]) {
                     q = i;
@@ -467,10 +467,9 @@ class Solution {
             swap(nums[p], nums[q]);
         }
         // reverse between (p, end)
-        for (int i = p + 1, j = nums.size() - 1; i <= j; i++, j--) {
+        for (int i = p + 1, j = nums.size() - 1; i < j; i++, j--) {
             swap(nums[i], nums[j]);
         }
-
         return;
     }
 
@@ -519,6 +518,9 @@ class Solution {
             return binsearch1(nums, mid, ed, target);
         }
     }
+    // 704. Binary Search
+    // Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums.
+    // If target exists, then return its index. Otherwise, return -1.
     int search1(vector<int>& nums, int target) {
         int len = nums.size();
         return binsearch1(nums, 0, nums.size(), target);
@@ -534,21 +536,29 @@ class Solution {
             return nums[st] == target ? st : -1;
         }
         int mid = st + len / 2;
-        if (nums[st] < nums[mid] && nums[mid] < nums[ed - 1]) {
+        if (nums[st] <= nums[mid] && nums[mid] <= nums[ed - 1]) { // not rotated
             if (nums[mid] > target) {
                 return binsearch(nums, st, mid, target);
             } else {
                 return binsearch(nums, mid, ed, target);
             }
-        } else {
+        } else if (nums[st] >= nums[ed - 1]) { // rotated
+            if (nums[st] < nums[mid] && nums[st] < target && nums[mid] > target) {
+                return binsearch(nums, st, mid, target);
+            } else if (nums[mid] < nums[ed - 1] && nums[mid] < target && nums[ed - 1] > target) {
+                return binsearch(nums, mid, ed, target);
+            }
+            // do both
             int r1 = binsearch(nums, st, mid, target);
             if (r1 != -1) {
                 return r1;
-            } else {
-                return binsearch(nums, mid, ed, target);
             }
+            return binsearch(nums, mid, ed, target);
         }
+        return -1; // illegal
     }
+    // 33. Search in Rotated Sorted Array
+    // Prior to being passed to your function, nums is possibly rotated at an unknown pivot index
     int search(vector<int>& nums, int target) {
         int len = nums.size();
         return binsearch(nums, 0, len, target);
@@ -599,7 +609,7 @@ class Solution {
             if (nums[st] == target) {
                 return st;
             } else if (nums[st] > target) {
-                return st - 1 < 0 ? 0 : st - 1;
+                return st == 0 ? 0 : st - 1;
             } else {
                 return st + 1;
             }
@@ -611,6 +621,9 @@ class Solution {
             return binsearchInsert(nums, mid, ed, target);
         }
     }
+    // 35. Search Insert Position
+    // Given a sorted array of distinct integers and a target value, return the index if the target is found.
+    // If not, return the index where it would be if it were inserted in order.
     int searchInsert(vector<int>& nums, int target) {
         int len = nums.size();
         return binsearchInsert(nums, 0, len, target);
