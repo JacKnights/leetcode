@@ -8,6 +8,7 @@
 #include <vector>
 #include "code.cpp"
 #include "lru_cache.cpp"
+#include "range_sum.cpp"
 #include "helper.cpp"
 
 using namespace std;
@@ -592,5 +593,24 @@ int main(int argc, char *argv[]) {
         vector<int> vec = {5, 2, 0, 3, 1};
         auto res = s.findArray(vec);
         printVectorInt(res, res.size());
+    }
+
+    if (args.find("binaryGap") != args.end()) {
+        printf("binaryGap: %d\n", s.binaryGap(22));
+        printf("binaryGap: %d\n", s.binaryGap(8));
+    }
+
+    if (args.find("sumRegion") != args.end()) {
+        vector<vector<int>> mat{
+            {3, 0, 1, 4, 2},
+            {5, 6, 3, 2, 1},
+            {1, 2, 0, 1, 5},
+            {4, 1, 0, 1, 7},
+            {1, 0, 3, 0, 5},
+        };
+        NumMatrix s(mat);
+        printf("sumRegion: %d\n", s.sumRegion(2, 1, 4, 3));
+        printf("sumRegion: %d\n", s.sumRegion(1, 1, 2, 2));
+        printf("sumRegion: %d\n", s.sumRegion(1, 2, 2, 4));
     }
 }

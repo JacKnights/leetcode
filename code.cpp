@@ -579,22 +579,23 @@ class Solution {
         } else if (nums[mid] < target) {
             return binsearchRange(nums, mid, ed, target);
         } else {
-            vector<int> res;
-            for (int i = st; i < ed; i++) {
-                if (nums[i] == target) {
-                    if (res.size() == 0) {
-                        res.push_back(i);
-                        res.push_back(i);
-                    } else {
-                        res[1] = i;
-                    }
-                } else if (nums[i] > target) {
+            vector<int> res{mid, mid};
+            for (int i = mid - 1; i >= st; i--) {
+                if (nums[i] != target) {
                     break;
                 }
+                res[0] = i;
+            }
+            for (int i = mid + 1; i < ed; i++) {
+                if (nums[i] != target) {
+                    break;
+                }
+                res[1] = i;
             }
             return res;
         }
     }
+    // 34. Find First and Last Position of Element in Sorted Array
     vector<int> searchRange(vector<int>& nums, int target) {
         int len = nums.size();
         return binsearchRange(nums, 0, len, target);
@@ -713,6 +714,7 @@ class Solution {
         }
         return false;
     }
+    // 37. Sudoku Solver
     void solveSudoku(vector<vector<char>>& board) {
         solve(board, 0, 0);
         return;
@@ -1773,6 +1775,27 @@ class Solution {
         for (int i = 1; i < pref.size(); i++) {
             res.push_back(pref[i - 1] ^ pref[i]);
         }
+        return res;
+    }
+
+    // 868. Binary Gap
+    // Given a positive integer n, find and return the longest distance between any two adjacent 1's in the binary representation of n.
+    // If there are no two adjacent 1's, return 0.
+    int binaryGap(int n) {
+        int mod = 0, quo = n;
+        int res = 0;
+        int st = -1;
+        int i = 0;
+        do {
+            if (quo % 2 == 1) {
+                if (st >= 0) {
+                    res = max(res, i - st);
+                }
+                st = i;
+            }
+            quo = quo >> 1;
+            i++;
+        } while (quo > 0);
         return res;
     }
 };
