@@ -613,4 +613,22 @@ int main(int argc, char *argv[]) {
         printf("sumRegion: %d\n", s.sumRegion(1, 1, 2, 2));
         printf("sumRegion: %d\n", s.sumRegion(1, 2, 2, 4));
     }
+
+    if (args.find("canCross") != args.end()) {
+        vector<int> vec;
+
+        vec = {0,1,3,5,6,8,12,17};
+        printf("canCross: %d\n", s.canCross(vec));
+        vec = {0,1,2,3,4,8,9,11};
+        printf("canCross: %d\n", s.canCross(vec));
+    }
+
+    if (args.find("findTargetSumWays") != args.end()) {
+        vector<int> vec;
+
+        vec = {1,1,1,1,1};
+        printf("findTargetSumWays: %d\n", s.findTargetSumWays(vec, 3));
+        vec = {1};
+        printf("findTargetSumWays: %d\n", s.findTargetSumWays(vec, 1));
+    }
 }

@@ -1686,22 +1686,25 @@ class Solution {
     }
 
     // 494. Target Sum
-    int findTargetSumWays(vector<int>& nums, int S) {
+    // You are given an integer array nums and an integer target.
+    // You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.
+    // For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
+    // Return the number of different expressions that you can build, which evaluates to target.
+    int findTargetSumWays(vector<int>& nums, int target) {
         int len = nums.size();
         if (len == 0) {
             return 0;
         }
         int sum = 0;
-        for (int i = len - 1; i >= 0; i--) {
+        for (int i = 0; i < len; i++) {
             sum += nums[i];
         }
-        if (S > sum || S < -sum) {
+        if (target > sum || target < -sum) {
             return 0;
         }
-        vector<vector<int>> dp;
-        dp.resize(len, vector<int>(2 * sum + 1, 0));
-        dp[0][sum + nums[0]]++;
-        dp[0][sum - nums[0]]++;
+        vector< vector<int> > dp(len, vector<int>(2 * sum + 1, 0)); // let sum be the middle index, left for sub, right for plus
+        dp[0][sum + nums[0]] = 1;
+        dp[0][sum - nums[0]] = 1;
         for (int i = 1; i < len; i++) {
             for (int j = 0; j < 2 * sum + 1; j++) {
                 if (j + nums[i] < 2 * sum + 1) {
@@ -1712,7 +1715,7 @@ class Solution {
                 }
             }
         }
-        return dp[len - 1][sum + S];
+        return dp[len - 1][sum + target];
     }
 
     // 322. Coin Change
@@ -1744,7 +1747,72 @@ class Solution {
         return dp[n];
     }
 
+    // 403. Frog Jump
+    // Given a list of stones positions (in units) in sorted ascending order, determine if the frog can cross the river by landing on the last stone.
+    // Initially, the frog is on the first stone and assumes the first jump must be 1 unit.
+    // If the frog's last jump was k units, its next jump must be either k - 1, k, or k + 1 units. The frog can only jump in the forward direction.
+    // Input: stones = [0,1,3,5,6,8,12,17]
+    // Output: true
+    // Explanation: 1 unit to the 2nd stone,
+    //  then 2 units to the 3rd stone,
+    //   then 2 units to the 4th stone,
+    //    then 3 units to the 6th stone,
+    //     4 units to the 7th stone,
+    //      and 5 units to the 8th stone.
+    // bool canCross(vector<int>& stones) {
+    //     unordered_set<int> st;
+    //     if (stones[0] != 0 || stones[1] != 1) {
+    //         return false;
+    //     }
+    //     st.insert(stones[0]);
+    //     for (int i = 1; i < stones.size(); i++) {
+    //         if (stones[i] - stones[i-1] > i) {
+    //             return false;
+    //         }
+    //         st.insert(stones[i]);
+    //     }
+    //     return doCanCross(st, 1, 1, stones[stones.size() - 1]);
+    // }
+    // bool doCanCross(unordered_set<int>& st, int pos, int k, int end) {
+    //     if (pos + k - 1 <= end && pos + k + 1 >= end) {
+    //         return true;
+    //     }
+    //     for (int new_k = k - 1; new_k <= k + 1; new_k++) {
+    //         if (new_k < 1) {
+    //             continue;
+    //         }
+    //         if (st.find(pos + new_k) != st.end() && doCanCross(st, pos + new_k, new_k, end)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+    // current AC solution
+    bool doCanCross(vector<int> &stones, vector<vector<int>> &dp, int cur, int pre_step) {
+        if (cur == stones.size() - 1) return true; // reach end
+        if (dp[cur][pre_step] != -1) return dp[cur][pre_step]; // already processed
+
+        int min_step = max(1, pre_step - 1); // cannot be zero
+        int max_step = pre_step + 1;
+        int left = lower_bound(stones.begin(), stones.end(), stones[cur] + min_step) - stones.begin();
+        int right = upper_bound(stones.begin(), stones.end(), stones[cur] + max_step) - stones.begin();
+
+        for (int i = left; i < right; i++) {
+            if (doCanCross(stones, dp, i, stones[i] - stones[cur])) {
+                dp[cur][pre_step] = true;
+                return true;
+            }
+        }
+        dp[cur][pre_step] = false;
+        return false;
+    }
+    bool canCross(vector<int>& stones) {
+        vector<vector<int>> dp(stones.size(), vector<int>(stones.size(), -1));
+        return doCanCross(stones, dp, 0, 0);
+    }
+
     // 416. Partition Equal Subset Sum
+    // Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
     bool canPartition(vector<int>& nums) {
         int sum = 0;
         for (int i = 0; i < nums.size(); i++) {
@@ -1760,6 +1828,7 @@ class Solution {
             for (int j = target - nums[i]; j >= 0; j--) {
                 reach[j + nums[i]] = reach[j + nums[i]] || reach[j];
             }
+            if (reach[target]) break;
         }
         return reach[target];
     }

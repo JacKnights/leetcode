@@ -1,6 +1,5 @@
 #include <vector>
 #include <unordered_map>
-#include "helper.cpp"
 
 using namespace std;
 
