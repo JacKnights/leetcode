@@ -631,4 +631,24 @@ int main(int argc, char *argv[]) {
         vec = {1};
         printf("findTargetSumWays: %d\n", s.findTargetSumWays(vec, 1));
     }
+
+    if (args.find("coinChange") != args.end()) {
+        vector<int> vec;
+
+        vec = {1,2,5};
+        printf("coinChange: %d\n", s.coinChange(vec, 11));
+        vec = {2};
+        printf("coinChange: %d\n", s.coinChange(vec, 3));
+        vec = {1};
+        printf("coinChange: %d\n", s.coinChange(vec, 0));
+    }
+
+    if (args.find("findMaxForm") != args.end()) {
+        vector<string> vec;
+
+        vec = {"10","0001","111001","1","0"};
+        printf("findMaxForm: %d\n", s.findMaxForm(vec, 5, 3));
+        vec = {"10","0","1"};
+        printf("findMaxForm: %d\n", s.findMaxForm(vec, 1, 1));
+    }
 }

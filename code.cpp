@@ -1691,47 +1691,76 @@ class Solution {
     // For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
     // Return the number of different expressions that you can build, which evaluates to target.
     int findTargetSumWays(vector<int>& nums, int target) {
-        int len = nums.size();
-        if (len == 0) {
+        if (nums.empty()) {
             return 0;
         }
-        int sum = 0;
-        for (int i = 0; i < len; i++) {
-            sum += nums[i];
-        }
+        int sum = accumulate(nums.begin(), nums.end(), 0);
         if (target > sum || target < -sum) {
             return 0;
         }
-        vector< vector<int> > dp(len, vector<int>(2 * sum + 1, 0)); // let sum be the middle index, left for sub, right for plus
-        dp[0][sum + nums[0]] = 1;
-        dp[0][sum - nums[0]] = 1;
-        for (int i = 1; i < len; i++) {
-            for (int j = 0; j < 2 * sum + 1; j++) {
-                if (j + nums[i] < 2 * sum + 1) {
-                    dp[i][j + nums[i]] += dp[i - 1][j];
-                }
-                if (j - nums[i] >= 0) {
-                    dp[i][j - nums[i]] += dp[i - 1][j];
-                }
+        if ((target + sum) % 2 != 0) { // target and sum should both be even or odd
+            return 0;
+        }
+        int new_target = (target + sum) / 2; // sum = A + B and target = A - B, A = (sum+target)/2
+        vector<int> dp(new_target + 1, 0);
+        dp[0] = 1;
+        for (int i = 0; i < nums.size(); i++) { // 01 knapsack problem
+            for (int j = new_target; j >= nums[i]; j--) {
+                dp[j] = dp[j] + dp[j - nums[i]];
             }
         }
-        return dp[len - 1][sum + target];
+        return dp[new_target];
     }
 
     // 322. Coin Change
+    // You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+    // Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+    // You may assume that you have an infinite number of each kind of coin.
     int coinChange(vector<int>& coins, int amount) {
         vector<int> dp(amount + 1, -1);
         dp[0] = 0;
-        for (int i = 1; i <= amount; i++) {
-            for (int j = 0; j < coins.size(); j++) {
-                if (i >= coins[j]) {
-                    if ((dp[i] == -1 || dp[i] > dp[i - coins[j]] + 1) && dp[i - coins[j]] != -1) {
-                        dp[i] = dp[i - coins[j]] + 1;
-                    }
+        for (int i = 0; i < coins.size(); i++) {
+            for (int j = coins[i]; j <= amount; j++) {
+                if ((dp[j] == -1 || dp[j] > dp[j - coins[i]] + 1) && dp[j - coins[i]] != -1) {
+                    dp[j] = dp[j - coins[i]] + 1;
                 }
             }
         }
         return dp[amount];
+    }
+
+    // 474. Ones and Zeros
+    // You are given an array of binary strings strs and two integers m and n.
+    // Return the size of the largest subset of strs such that there are at most m 0's and n 1's in the subset.
+    // A set x is a subset of a set y if all elements of x are also elements of y.
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        vector<int> ones(strs.size(), 0);
+        for (int i = 0; i < strs.size(); i++) {
+            for (int j = 0; j < strs[i].size(); j++) {
+                if (strs[i][j] == '1') {
+                    ones[i]++;
+                }
+            }
+        }
+        // vector<vector<vector<int>>> dp(strs.size() + 1, vector<vector<int>>(m + 1, vector<int>(n + 1, 0)));
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        for (int i = 1; i <= strs.size(); i++) {
+            int c1 = ones[i - 1];
+            int c0 = strs[i - 1].size() - c1;
+            // for (int j = c0; j <= m; j++) {
+            //     for (int k = c1; k <= n; k++) {
+            //         printf("i: %d j: %d k: %d -- %d %d\n", i, j, k, dp[i - 1][j][k], dp[i - 1][j - c0][k - c1]);
+            //         dp[i][j][k] = max(dp[i - 1][j][k], dp[i - 1][j - c0][k - c1] + 1);
+            //     }
+            // }
+            for (int j = m; j >= c0; j--) {
+                for (int k = n; k >= c1; k--) {
+                    dp[j][k] = max(dp[j][k], 1 + dp[j - c0][k - c1]);
+                }
+            }
+        }
+        // return dp[strs.size()][m][n];
+        return dp[m][n];
     }
 
     // 279. Perfect Squares
@@ -1825,8 +1854,8 @@ class Solution {
         vector<bool> reach(target + 1, false);
         reach[0] = true;
         for (int i = 0; i < nums.size(); i++) {
-            for (int j = target - nums[i]; j >= 0; j--) {
-                reach[j + nums[i]] = reach[j + nums[i]] || reach[j];
+            for (int j = target; j >= nums[i]; j--) {
+                reach[j] = reach[j] || reach[j - nums[i]];
             }
             if (reach[target]) break;
         }
