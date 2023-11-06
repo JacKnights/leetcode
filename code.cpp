@@ -1742,24 +1742,41 @@ class Solution {
                 }
             }
         }
-        // vector<vector<vector<int>>> dp(strs.size() + 1, vector<vector<int>>(m + 1, vector<int>(n + 1, 0)));
+        // not compressed
+        // vector<vector<vector<int>>> dp(strs.size(), vector<vector<int>>(m + 1, vector<int>(n + 1, 0)));
+        // int c1 = ones[0];
+        // int c0 = strs[0].size() - c1;
+        // for (int j = c0; j <= m; j++) {
+        //     for (int k = c1; k <= n; k++) {
+        //         dp[0][j][k] = 1;
+        //     }
+        // }
+        // for (int i = 1; i < strs.size(); i++) {
+        //     int c1 = ones[i];
+        //     int c0 = strs[i].size() - c1;
+        //     for (int j = 0; j <= m; j++) {
+        //         for (int k = 0; k <= n; k++) {
+        //             if (j >= c0 && k >= c1) {
+        //                 dp[i][j][k] = max(dp[i - 1][j][k], dp[i - 1][j - c0][k - c1] + 1);
+        //             } else {
+        //                 dp[i][j][k] = dp[i - 1][j][k];
+        //             }
+        //         }
+        //     }
+        // }
+        // return dp[strs.size() - 1][m][n];
+
+        // compressed
         vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
         for (int i = 1; i <= strs.size(); i++) {
             int c1 = ones[i - 1];
             int c0 = strs[i - 1].size() - c1;
-            // for (int j = c0; j <= m; j++) {
-            //     for (int k = c1; k <= n; k++) {
-            //         printf("i: %d j: %d k: %d -- %d %d\n", i, j, k, dp[i - 1][j][k], dp[i - 1][j - c0][k - c1]);
-            //         dp[i][j][k] = max(dp[i - 1][j][k], dp[i - 1][j - c0][k - c1] + 1);
-            //     }
-            // }
             for (int j = m; j >= c0; j--) {
                 for (int k = n; k >= c1; k--) {
                     dp[j][k] = max(dp[j][k], 1 + dp[j - c0][k - c1]);
                 }
             }
         }
-        // return dp[strs.size()][m][n];
         return dp[m][n];
     }
 

@@ -650,5 +650,7 @@ int main(int argc, char *argv[]) {
         printf("findMaxForm: %d\n", s.findMaxForm(vec, 5, 3));
         vec = {"10","0","1"};
         printf("findMaxForm: %d\n", s.findMaxForm(vec, 1, 1));
+        vec = {"10","0001","111001","1","0"};
+        printf("findMaxForm: %d\n", s.findMaxForm(vec, 3, 4));
     }
 }
