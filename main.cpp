@@ -7,11 +7,17 @@
 #include <string>
 #include <vector>
 #include "code.cpp"
+#include "dp_code.cpp"
+#include "tree_code.cpp"
 #include "lru_cache.cpp"
 #include "range_sum.cpp"
 #include "helper.cpp"
 
 using namespace std;
+
+class MainSolution: public Solution, public DPSolution, public TreeSolution {
+
+};
 
 int main(int argc, char *argv[]) {
     set<string> args;
@@ -19,7 +25,7 @@ int main(int argc, char *argv[]) {
         args.insert(argv[i]);
     }
 
-    Solution s;
+    MainSolution s;
     if (args.find("longestPalindrome") != args.end()) {
         printf("longestPalindrome: %s\n", s.longestPalindrome("asdasdsad").c_str());
         printf("longestPalindrome: %s\n", s.longestPalindrome("ahha").c_str());
@@ -652,5 +658,16 @@ int main(int argc, char *argv[]) {
         printf("findMaxForm: %d\n", s.findMaxForm(vec, 1, 1));
         vec = {"10","0001","111001","1","0"};
         printf("findMaxForm: %d\n", s.findMaxForm(vec, 3, 4));
+    }
+
+    if (args.find("lengthOfLIS") != args.end()) {
+        vector<int> vec;
+
+        vec = {0,1,0,3,2,3};
+        printf("lengthOfLIS: %d\n", s.lengthOfLIS(vec));
+        vec = {7,7,7,7,7,7,7};
+        printf("lengthOfLIS: %d\n", s.lengthOfLIS(vec));
+        vec = {10,9,2,5,3,7,101,18};
+        printf("lengthOfLIS: %d\n", s.lengthOfLIS(vec));
     }
 }
