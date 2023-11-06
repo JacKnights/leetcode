@@ -467,13 +467,29 @@ class DPSolution {
     // Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
     // You may assume that you have an infinite number of each kind of coin.
     int coinChange(vector<int>& coins, int amount) {
-        vector<int> dp(amount + 1, -1);
+        vector<int> dp(amount + 1, INT_MAX);
         dp[0] = 0;
         for (int i = 0; i < coins.size(); i++) {
             for (int j = coins[i]; j <= amount; j++) {
-                if ((dp[j] == -1 || dp[j] > dp[j - coins[i]] + 1) && dp[j - coins[i]] != -1) {
-                    dp[j] = dp[j - coins[i]] + 1;
+                if (dp[j - coins[i]] != INT_MAX) {
+                    dp[j] = min(dp[j], dp[j - coins[i]] + 1);
                 }
+            }
+        }
+        return dp[amount] != INT_MAX ? dp[amount]: -1;
+    }
+
+    // 518. Coin Change II
+    // You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+    // Return the number of combinations that make up that amount. If that amount of money cannot be made up by any combination of the coins, return 0.
+    // You may assume that you have an infinite number of each kind of coin.
+    // The answer is guaranteed to fit into a signed 32-bit integer.
+    int change(int amount, vector<int>& coins) {
+        vector<int> dp(amount + 1, 0);
+        dp[0] = 1;
+        for (int i = 0; i < coins.size(); i++) {
+            for (int j = coins[i]; j <= amount; j++) {
+                dp[j] += dp[j - coins[i]];
             }
         }
         return dp[amount];
@@ -531,6 +547,9 @@ class DPSolution {
     }
 
     // 279. Perfect Squares
+    // Given an integer n, return the least number of perfect square numbers that sum to n.
+    // A perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.
+    // For example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
     int numSquares(int n) {
         vector<int> dp(n + 1, INT_MAX);
         dp[0] = 0;
@@ -649,7 +668,32 @@ class DPSolution {
     // Given n cuboids where the dimensions of the ith cuboid is cuboids[i] = [widthi, lengthi, heighti] (0-indexed). Choose a subset of cuboids and place them on each other.
     // You can place cuboid i on cuboid j if widthi <= widthj and lengthi <= lengthj and heighti <= heightj. You can rearrange any cuboid's dimensions by rotating it to put it on another cuboid.
     // Return the maximum height of the stacked cuboids.
-    int maxHeight(vector<vector<int>>& cuboids) {
-        
+    static bool comp(vector<int> &d1, vector<int> &d2) { // comparator function
+        if (d1[0] == d2[0]) {
+            if (d1[1] == d2[1]) {
+                return d1[2] < d2[2];
+            }
+            return d1[1] < d2[1];
+        }
+        return d1[0] < d2[0];
+    }
+    int maxHeight(vector<vector<int>> &cuboids) {
+        for (int i = 0; i < cuboids.size(); i++) { // sorting each value
+            sort(cuboids[i].begin(), cuboids[i].end());
+        }
+        sort(cuboids.begin(), cuboids.end(), comp); // sorting the array
+
+        vector<vector<int>> dp(cuboids.size() + 1, vector<int>(cuboids.size() + 1, 0));
+        for (int i = cuboids.size() - 1; i >= 0; i--) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (cuboids[j][0] <= cuboids[i][0] && cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2]) {
+                    dp[i][j + 1] = max(dp[i + 1][j + 1], cuboids[i][2] + dp[i + 1][i + 1]);
+                } else {
+                    dp[i][j + 1] = dp[i + 1][j + 1];
+                }
+            }
+            dp[i][0] = max(dp[i + 1][0], cuboids[i][2] + dp[i + 1][i + 1]);
+        }
+        return dp[0][0];
     }
 };

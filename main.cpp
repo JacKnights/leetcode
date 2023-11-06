@@ -649,6 +649,17 @@ int main(int argc, char *argv[]) {
         printf("coinChange: %d\n", s.coinChange(vec, 0));
     }
 
+    if (args.find("coinChange2") != args.end()) {
+        vector<int> vec;
+
+        vec = {1,2,5};
+        printf("coinChange2: %d\n", s.change(5, vec));
+        vec = {2};
+        printf("coinChange2: %d\n", s.change(3, vec));
+        vec = {10};
+        printf("coinChange2: %d\n", s.change(10, vec));
+    }
+
     if (args.find("findMaxForm") != args.end()) {
         vector<string> vec;
 
@@ -669,5 +680,18 @@ int main(int argc, char *argv[]) {
         printf("lengthOfLIS: %d\n", s.lengthOfLIS(vec));
         vec = {10,9,2,5,3,7,101,18};
         printf("lengthOfLIS: %d\n", s.lengthOfLIS(vec));
+    }
+
+    if (args.find("maxHeight") != args.end()) {
+        vector<vector<int>> vec;
+
+        vec = { { 50, 45, 20 }, { 95, 37, 53 }, { 45, 23, 12 } };
+        printf("maxHeight: %d\n", s.maxHeight(vec));
+        vec = { { 38, 25, 45 }, { 76, 35, 3 } };
+        printf("maxHeight: %d\n", s.maxHeight(vec));
+        vec = { { 7, 11, 17 }, { 7, 17, 11 }, { 11, 7, 17 }, { 11, 17, 7 }, { 17, 7, 11 }, { 17, 11, 7 } };
+        printf("maxHeight: %d\n", s.maxHeight(vec));
+        vec = { { 50, 26, 84 }, { 2, 55, 62 }, { 64, 63, 72 } };
+        printf("maxHeight: %d\n", s.maxHeight(vec));
     }
 }
