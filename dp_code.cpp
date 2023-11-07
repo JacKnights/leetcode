@@ -206,75 +206,71 @@ class DPSolution {
     }
 
     // 55. Jump Game
+    // You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position.
+    // Return true if you can reach the last index, or false otherwise.
     bool canJump(vector<int>& nums) {
         int len = nums.size();
         int last = 0;
-        for (int i = 0; i < len && i <= last; i++) {
+        for (int i = 0; i < len - 1; i++) {
+            if (last < i) {
+                return false;
+            }
             last = max(last, i + nums[i]);
+            if (last >= len - 1) {
+                return true;
+            }
         }
         return last >= len - 1;
     }
 
     // 45. Jump Game II
+    // You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+    // Each element nums[i] represents the maximum length of a forward jump from index i.
+    // In other words, if you are at nums[i], you can jump to any nums[i + j] where: 0 <= j <= nums[i] and i + j < n
+    // Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
     int jump(vector<int>& nums) {
         int len = nums.size();
-        if (len <= 1) {
-            return 0;
-        }
-        if (nums[0] >= len - 1) {
-            return 1;
-        }
-        vector<int> dp(len, 0);
-        for (int i = 1; i <= nums[0]; i++) {
-            dp[i] = 1;
-        }
-        for (int i = nums[0] + 1; i < len; i++) {
-            int minStep = INT_MAX;
-            for (int j = i - 1; j >= 0; j--) {
-                if (dp[j] > 0 && i - j <= nums[j]) {
-                    minStep = min(minStep, dp[j]);
-                }
-            }
-            if (minStep < INT_MAX) {
-                dp[i] = minStep + 1;
+        int res = 0;
+        int first = 0, last = 0; // current reachable [first, last]
+        for (int i = 0; i < len - 1; i++) {
+            last = max(last, i + nums[i]);
+            if (i == first) {
+                res++;
+                first = last;
+                if (last >= len - 1) break;
             }
         }
-        return dp[len - 1];
-
-        // // best
-        // int jumps = 0, curEnd = 0, last = 0;
-        // for (int i = 0; i < nums.size() - 1; i++) {
-        //     last = max(last, i + nums[i]);
-        //     if (i == curEnd) {
-        //         jumps++;
-        //         curEnd = last;
-        //     }
-        // }
-        // return jumps;
+        return res;
     }
 
-    // wildcard matching
+    // 44. wildcard matching
+    // Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
+    // '?' Matches any single character.
+    // '*' Matches any sequence of characters (including the empty sequence).
+    // The matching should cover the entire input string (not partial).
     bool isMatch(string s, string p) {
         vector<vector<int>> dp(s.size() + 1, vector<int>(p.size() + 1, false));
-        dp[0][0] = true;
-        for (int j = 0; j < p.size() && p[j] == '*'; j++) {
+        dp[0][0] = true; // both empty
+        for (int j = 0; j < p.size() && p[j] == '*'; j++) { // match void
             dp[0][j + 1] = true;
         }
-
         for (int i = 0; i < s.size(); i++) {
             for (int j = 0; j < p.size(); j++) {
-                if (p[j] == '*') {
+                if (p[j] == '*') { // match multiple or void or single
                     dp[i + 1][j + 1] = dp[i][j + 1] || dp[i + 1][j] || dp[i][j];
-                } else {
+                } else { // match single
                     dp[i + 1][j + 1] = (s[i] == p[j] || p[j] == '?') && dp[i][j];
                 }
             }
         }
-
         return dp[s.size()][p.size()];
     }
 
     // 62. Unique Paths
+    // There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]).
+    // The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]).
+    // The robot can only move either down or right at any point in time.
+    // Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
     int uniquePaths(int m, int n) {
         if (m < 1 || n < 1) {
             return 0;
@@ -296,6 +292,11 @@ class DPSolution {
     }
 
     // 63. Unique Paths II
+    // You are given an m x n integer array grid. There is a robot initially located at the top-left corner (i.e., grid[0][0]).
+    // The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]).
+    // The robot can only move either down or right at any point in time.
+    // An obstacle and space are marked as 1 or 0 respectively in grid. A path that the robot takes cannot include any square that is an obstacle.
+    // Return the number of possible unique paths that the robot can take to reach the bottom-right corner.
     int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
         int m = obstacleGrid.size();
         if (m < 1) {
@@ -368,6 +369,9 @@ class DPSolution {
         return uniquePathsIIIDFS(grid, m, n, empty, st_x, st_y, 0);
     }
 
+    // 64. Minimum Path Sum
+    // Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+    // Note: You can only move either down or right at any point in time.
     int minPathSum(vector<vector<int>>& grid) {
         int m = grid.size();
         if (m < 1) {
