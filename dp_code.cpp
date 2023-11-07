@@ -413,6 +413,7 @@ class DPSolution {
     }
 
     // 42. Trapping Rain Water
+    // Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
     int trap(vector<int>& height) {
         int len = height.size();
         if (len == 0) {
@@ -433,6 +434,44 @@ class DPSolution {
             ans += (min(left[i], right[i]) - height[i]);
         }
         return ans;
+    }
+
+    // 407. Trapping Rain Water II
+    // Given an m x n integer matrix heightMap representing the height of each unit cell in a 2D elevation map, return the volume of water it can trap after raining.
+    int trapRainWater(vector<vector<int>>& heightMap) {
+        if (heightMap.empty()) return 0;
+        int m = heightMap.size(), n = heightMap[0].size();
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> min_heap; // smallest on top, which is the lowest height
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i == 0 || i == m - 1 || j == 0 || j == n - 1) { // add the edges and corners
+                    min_heap.push({heightMap[i][j], i * n + j});
+                    visited[i][j] = true;
+                }
+            }
+        }
+        int cur_bottom = 0; // current bottom or the water
+        int res = 0;
+        while (!min_heap.empty()) {
+            auto t = min_heap.top();
+            min_heap.pop();
+            int h = t.first, x0 = t.second / n, y0 = t.second % n;
+            cur_bottom = max(cur_bottom, h);
+            int dirs[4][2] = {{0,-1},{-1,0},{0,1},{1,0}}; // check 4 adjacent coordinates
+            for (int i = 0; i < 4; ++i) {
+                int x = x0 + dirs[i][0], y = y0 + dirs[i][1];
+                if (x < 0 || x >= m || y < 0 || y >= n || visited[x][y]) {
+                    continue;
+                }
+                if (cur_bottom > heightMap[x][y]) {
+                    res += (cur_bottom - heightMap[x][y]);
+                }
+                min_heap.push({heightMap[x][y], x * n + y});
+                visited[x][y] = true;
+            }
+        }
+        return res;
     }
 
     // 494. Target Sum

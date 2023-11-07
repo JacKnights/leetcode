@@ -694,4 +694,15 @@ int main(int argc, char *argv[]) {
         vec = { { 50, 26, 84 }, { 2, 55, 62 }, { 64, 63, 72 } };
         printf("maxHeight: %d\n", s.maxHeight(vec));
     }
+
+    if (args.find("trapRainWater") != args.end()) {
+        vector<vector<int>> vec;
+
+        vec = {{1,4,3,1,3,2},{3,2,1,3,2,4},{2,3,3,2,3,1}};
+        printf("trapRainWater: %d\n", s.trapRainWater(vec));
+        vec = {{3,3,3,3,3},{3,2,2,2,3},{3,2,1,2,3},{3,2,2,2,3},{3,3,3,3,3}};
+        printf("trapRainWater: %d\n", s.trapRainWater(vec));
+        vec = {{5,5,5,1},{5,1,1,5},{5,1,5,5},{5,2,5,8}};
+        printf("trapRainWater: %d\n", s.trapRainWater(vec));
+    }
 }
