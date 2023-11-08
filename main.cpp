@@ -471,6 +471,23 @@ int main(int argc, char *argv[]) {
         printf("jump: %d\n", s.jump(nums));
     }
 
+    if (args.find("canReach") != args.end()) {
+        vector<int> nums;
+        nums = {4,2,3,0,3,1,2};
+        printf("canReach: %d\n", s.canReach(nums, 5));
+        nums = {4,2,3,0,3,1,2};
+        printf("canReach: %d\n", s.canReach(nums, 0));
+        nums = {3,0,2,1,2};
+        printf("canReach: %d\n", s.canReach(nums, 2));
+        nums = {4,4,1,3,0,3};
+        printf("canReach: %d\n", s.canReach(nums, 2));
+    }
+
+    if (args.find("canReach") != args.end()) {
+        printf("canReach: %d\n", s.canReach("011010", 2, 3));
+        printf("canReach: %d\n", s.canReach("01101110", 2, 3));
+    }
+
     if (args.find("isMatch") != args.end()) {
         printf("isMatch: %d\n", s.isMatch("abcde", "*a*e"));
         printf("isMatch: %d\n", s.isMatch("abcde", "*a"));

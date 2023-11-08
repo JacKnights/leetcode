@@ -243,6 +243,45 @@ class DPSolution {
         return res;
     }
 
+    // 1306. Jump Game III
+    // Given an array of non-negative integers arr, you are initially positioned at start index of the array.
+    // When you are at index i, you can jump to i + arr[i] or i - arr[i], check if you can reach any index with value 0.
+    // Notice that you can not jump outside of the array at any time.
+    bool canReach(vector<int>& arr, int start) {
+        unordered_set<int> visited;
+        return doCanReach(visited, arr, start);
+    }
+    bool doCanReach(unordered_set<int>& visited, vector<int>& arr, int root) {
+        if (root < 0 || root >= arr.size()) return false;
+        if (visited.find(root) != visited.end()) return false;
+        if (arr[root] == 0) return true;
+        visited.insert(root);
+        int left = root - arr[root];
+        int right = root + arr[root];
+        return doCanReach(visited, arr, left) || doCanReach(visited, arr, right);
+    }
+
+    // 1871. Jump Game VII
+    // You are given a 0-indexed binary string s and two integers minJump and maxJump. In the beginning, you are standing at index 0, which is equal to '0'.
+    // You can move from index i to index j if the following conditions are fulfilled: i + minJump <= j <= min(i + maxJump, s.length - 1), and s[j] == '0'.
+    // Return true if you can reach index s.length - 1 in s, or false otherwise.
+    bool canReach(string s, int minJump, int maxJump) {
+        int n = s.size();
+        vector<bool> dp(n, false);
+        dp[0] = true;
+        int last = 0;
+        for (int i = 0; i < n; ++i) {
+            if (dp[i]) {
+                for (last = max(last, i + minJump); last <= min(n - 1, i + maxJump); ++last) {
+                    if (s[last] == '0') {
+                        dp[last] = true;
+                    }
+                }
+            }
+        }
+        return dp[n - 1];
+    }
+
     // 44. wildcard matching
     // Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
     // '?' Matches any single character.
