@@ -488,6 +488,32 @@ int main(int argc, char *argv[]) {
         printf("canReach: %d\n", s.canReach("01101110", 2, 3));
     }
 
+    if (args.find("maxResult") != args.end()) {
+        vector<int> nums;
+        nums = {1,-1,-2,4,-7,3};
+        printf("maxResult: %d\n", s.maxResult(nums, 2));
+        nums = {10,-5,-2,4,0,3};
+        printf("maxResult: %d\n", s.maxResult(nums, 3));
+        nums = {1,-5,-20,4,-1,3,-6,-3};
+        printf("maxResult: %d\n", s.maxResult(nums, 2));
+    }
+
+    if (args.find("minJumps") != args.end()) {
+        vector<int> nums;
+        nums = {100,-23,-23,404,100,23,23,23,3,404};
+        printf("minJumps: %d\n", s.minJumps(nums));
+        nums = {7};
+        printf("minJumps: %d\n", s.minJumps(nums));
+        nums = {7,6,9,6,9,6,9,7};
+        printf("minJumps: %d\n", s.minJumps(nums));
+        nums = {11,22,7,7,7,7,7,7,7,22,13};
+        printf("minJumps: %d\n", s.minJumps(nums));
+        nums = {2,0,2,0};
+        printf("minJumps: %d\n", s.minJumps(nums));
+        nums = {51,64,-15,58,98,31,48,72,78,-63,92,-5,64,-64,51,-48,64,48,-76,-86,-5,-64,-86,-47,92,-41,58,72,31,78,-15,-76,72,-5,-97,98,78,-97,-41,-47,-86,-97,78,-97,58,-41,72,-41,72,-25,-76,51,-86,-65,78,-63,72,-15,48,-15,-63,-65,31,-41,95,51,-47,51,-41,-76,58,-81,-41,88,58,-81,88,88,-47,-48,72,-25,-86,-41,-86,-64,-15,-63};
+        printf("minJumps: %d\n", s.minJumps(nums));
+    }
+
     if (args.find("isMatch") != args.end()) {
         printf("isMatch: %d\n", s.isMatch("abcde", "*a*e"));
         printf("isMatch: %d\n", s.isMatch("abcde", "*a"));

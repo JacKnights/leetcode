@@ -261,6 +261,77 @@ class DPSolution {
         return doCanReach(visited, arr, left) || doCanReach(visited, arr, right);
     }
 
+    // 1345. Jump Game IV
+    // Given an array of integers arr, you are initially positioned at the first index of the array.
+    // In one step you can jump from index i to index:
+    // i + 1 where: i + 1 < arr.length.
+    // i - 1 where: i - 1 >= 0.
+    // j where: arr[i] == arr[j] and i != j.
+    // Return the minimum number of steps to reach the last index of the array.
+    // Notice that you can not jump outside of the array at any time.
+    int minJumps(vector<int>& arr) {
+        int len = arr.size();
+        if (len == 1) return 0; 
+        vector<int> dp(len, INT_MAX); // record jumps
+        unordered_map<int, vector<int>> m; // map value -> indexes
+        for (int i = 0; i < len; i++) {
+            if (m.find(arr[i]) == m.end()) {
+                m[arr[i]] = vector<int>();
+            }
+            m[arr[i]].push_back(i);
+        }
+        queue<pair<int, int>> q; // for bfs, record index&value pairs
+        q.push(make_pair(0, 0));
+        while (!q.empty()) {
+            int index = q.front().first;
+            int level = q.front().second;
+            q.pop();
+            if (index == len - 1) return level; // end of search, must break
+            dp[index] = level;
+            int value = arr[index];
+            if (m.find(value) != m.end()) {
+                for (auto iter = m[value].begin(); iter != m[value].end(); iter++) {
+                    if (dp[*iter] > level + 1) { // if indexes with same value not searched
+                        q.push(make_pair(*iter, level + 1));
+                    }
+                }
+                m.erase(value); // save memory or it will exceed for some cases
+            }
+            if (index > 0 && dp[index - 1] > level + 1) { // if left not searched
+                q.push(make_pair(index - 1, level + 1));
+            }
+            if (index < len - 1 && dp[index + 1] > level + 1) { // if right not searched
+                q.push(make_pair(index + 1, level + 1));
+            }
+        }
+        return dp[len - 1];
+    }
+
+    // 1696. Jump Game VI
+    // You are given a 0-indexed integer array nums and an integer k.
+    // You are initially standing at index 0. In one move, you can jump at most k steps forward without going outside the boundaries of the array.
+    // That is, you can jump from index i to any index in the range [i + 1, min(n - 1, i + k)] inclusive.
+    // You want to reach the last index of the array (index n - 1). Your score is the sum of all nums[j] for each index j you visited in the array.
+    // Return the maximum score you can get.
+    int maxResult(vector<int>& nums, int k) {
+        int len = nums.size();
+        vector<int> dp(len);
+        deque<int> q; // indexes with dp value in descent order
+        dp[0] = nums[0];
+        q.push_back(0);
+        for (int i = 1; i < len; i++) {
+            while (q.front() < i - k) { // drop unreachable indexes
+                q.pop_front();
+            }
+            dp[i] = nums[i] + dp[q.front()]; // q front has the max sum for each index i
+            while (!q.empty() && dp[q.back()] <= dp[i]) { // make sure every dp with index in q in desc order
+                q.pop_back();
+            }
+            q.push_back(i);
+        }
+        return dp.back();
+    }
+
     // 1871. Jump Game VII
     // You are given a 0-indexed binary string s and two integers minJump and maxJump. In the beginning, you are standing at index 0, which is equal to '0'.
     // You can move from index i to index j if the following conditions are fulfilled: i + minJump <= j <= min(i + maxJump, s.length - 1), and s[j] == '0'.

@@ -78,4 +78,12 @@ void printMapIntInt(map<int, int> m) {
     printf("]\n");
 }
 
+void printMapIntInt(unordered_map<int, int> m) {
+    printf("[");
+    for (auto iter = m.begin(); iter != m.end(); iter++) {
+        printf("  %d: %d ", iter->first, iter->second);
+    }
+    printf("]\n");
+}
+
 #endif
