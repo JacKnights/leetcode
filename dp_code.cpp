@@ -307,6 +307,58 @@ class DPSolution {
         return dp[len - 1];
     }
 
+    // 1340. Jump Game V
+    // Given an array of integers arr and an integer d. In one step you can jump from index i to index:
+    // i + x where: i + x < arr.length and  0 < x <= d.
+    // i - x where: i - x >= 0 and  0 < x <= d.
+    // In addition, you can only jump from index i to index j if arr[i] > arr[j] and arr[i] > arr[k] for all indices k between i and j (More formally min(i, j) < k < max(i, j)).
+    // You can choose any index of the array and start jumping. Return the maximum number of indices you can visit.
+    // Notice that you can not jump outside of the array at any time.
+    int maxJumps(vector<int>& arr, int d) { // my solution
+        int len = arr.size();
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> min_heap;
+        for (int i = 0; i < len; i++) {
+            min_heap.push(make_pair(arr[i], i)); // record indexes ascent order by their values
+        }
+        vector<int> dp(len, 1); // at least one jump for each
+        while (!min_heap.empty()) { // pop index with current smallest value
+            int index = min_heap.top().second;
+            min_heap.pop();
+            int left_max = arr[index]; // cannot jump to left elem smaller than left max
+            for (int i = index - 1; i >= max(0, index - d); i--) {
+                if (arr[i] > left_max) {
+                    dp[i] = max(dp[i], dp[index] + 1);
+                }
+                left_max = max(left_max, arr[i]);
+            }
+            int right_max = arr[index]; // cannot jump to right elem smaller than right max
+            for (int i = index + 1; i <= min(len - 1, index + d); i++) {
+                if (arr[i] > right_max) {
+                    dp[i] = max(dp[i], dp[index] + 1);
+                }
+                right_max = max(right_max, arr[i]);
+            }
+        }
+        int res = *max_element(dp.begin(), dp.end());
+        return res;
+    }
+    // best
+    // int dfs(vector<int>& arr, vector<int>& dp, int i, int d, int res = 1) {
+    //     if (dp[i]) return dp[i];
+    //     int n = arr.size();
+    //     for (auto j = i + 1; j <= min(i + d, n - 1) && arr[j] < arr[i]; ++j)
+    //         res = max(res, 1 + dfs(arr, dp, j, d));
+    //     for (auto j = i - 1; j >= max(0, i - d) && arr[j] < arr[i]; --j)
+    //         res = max(res, 1 + dfs(arr, dp, j, d));
+    //     return dp[i] = res;
+    // }
+    // int maxJumps(vector<int>& arr, int d, int res = 1) {
+    //     vector<int> dp(arr.size(), 0);
+    //     for (auto i = 0; i < arr.size(); ++i)
+    //         res = max(res, dfs(arr, dp, i, d));
+    //     return res;
+    // }
+
     // 1696. Jump Game VI
     // You are given a 0-indexed integer array nums and an integer k.
     // You are initially standing at index 0. In one move, you can jump at most k steps forward without going outside the boundaries of the array.

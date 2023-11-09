@@ -514,6 +514,16 @@ int main(int argc, char *argv[]) {
         printf("minJumps: %d\n", s.minJumps(nums));
     }
 
+    if (args.find("maxJumps") != args.end()) {
+        vector<int> nums;
+        nums = {6,4,14,6,8,13,9,7,10,6,12};
+        printf("maxJumps: %d\n", s.maxJumps(nums, 2));
+        nums = {3,3,3,3,3};
+        printf("maxJumps: %d\n", s.maxJumps(nums, 3));
+        nums = {7,6,5,4,3,2,1};
+        printf("maxJumps: %d\n", s.maxJumps(nums, 1));
+    }
+
     if (args.find("isMatch") != args.end()) {
         printf("isMatch: %d\n", s.isMatch("abcde", "*a*e"));
         printf("isMatch: %d\n", s.isMatch("abcde", "*a"));
