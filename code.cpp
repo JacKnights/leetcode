@@ -782,7 +782,7 @@ class Solution {
     // Return the number of rods that have all three colors of rings on them.
     int countPoints(string rings) {
         int len = rings.size() / 2;
-        vector<short int> buckets(10, 0);
+        vector<char> buckets(10, 0);
         for (int i = 0; i < rings.size(); i += 2) {
             int key = rings[i + 1] - '0';
             switch (rings[i]) {
