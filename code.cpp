@@ -772,4 +772,35 @@ class Solution {
         } while (quo > 0);
         return res;
     }
+
+    // 2103. Rings and Rods
+    // There are n rings and each ring is either red, green, or blue. The rings are distributed across ten rods labeled from 0 to 9.
+    // You are given a string rings of length 2n that describes the n rings that are placed onto the rods. Every two characters in rings forms a color-position pair that is used to describe each ring where:
+    // The first character of the ith pair denotes the ith ring's color ('R', 'G', 'B').
+    // The second character of the ith pair denotes the rod that the ith ring is placed on ('0' to '9').
+    // For example, "R3G2B1" describes n == 3 rings: a red ring placed onto the rod labeled 3, a green ring placed onto the rod labeled 2, and a blue ring placed onto the rod labeled 1.
+    // Return the number of rods that have all three colors of rings on them.
+    int countPoints(string rings) {
+        int len = rings.size() / 2;
+        vector<short int> buckets(10, 0);
+        for (int i = 0; i < rings.size(); i += 2) {
+            int key = rings[i + 1] - '0';
+            switch (rings[i]) {
+                case 'R':
+                    buckets[key] |= 1;
+                    break;
+                case 'G':
+                    buckets[key] |= 2;
+                    break;
+                case 'B':
+                    buckets[key] |= 4;
+                    break;
+            }
+        }
+        int ans = 0;
+        for (int i = 0; i < 10; i++) {
+            if (buckets[i] == 7) ans++;
+        }
+        return ans;
+    }
 };
