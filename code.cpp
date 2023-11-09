@@ -803,4 +803,63 @@ class Solution {
         }
         return ans;
     }
+
+    // 912. Sort an Array
+    // Given an array of integers nums, sort the array in ascending order and return it.
+    // You must solve the problem without using any built-in functions in O(nlog(n)) time complexity and with the smallest space complexity possible.
+    vector<int> sortArray(vector<int>& nums) {
+        // quickSortArray(nums, 0, nums.size() - 1); // quick sort won't pass some anti-quick-sort cases
+        hashBucketSortArray(nums); // values not too large, can use bucket sort
+        return nums;
+    }
+    void quickSortArray(vector<int>& nums, int start, int end) {
+        if (start >= end) return;
+        int mid = nums[start];
+        int i = start, j = end;
+        while (i < j) {
+            while (i < j && nums[j] >= mid) {
+                j--;
+            }
+            if (i < j) {
+                nums[i++] = nums[j];
+            }
+            while (i < j && nums[i] <= mid) {
+                i++;
+            }
+            if (i < j) {
+                nums[j--] = nums[i];
+            }
+        }
+        nums[i] = mid; // i == j
+        quickSortArray(nums, start, i - 1);
+        quickSortArray(nums, i + 1, end);
+    }
+    void hashBucketSortArray(vector<int>& nums) {
+        vector<int> m(100001, 0);
+        const int offset = 50000;
+        for (int i = 0; i < nums.size(); i++) {
+            m[nums[i] + offset] += 1;
+        }
+        int cur = 0;
+        for (int i = 0; i <= 100000; i++) {
+            for (int j = 0; j < m[i]; j++) {
+                nums[cur++] = i-offset;
+            }
+        }
+    }
+    void treeBucketSortArray(vector<int>& nums) {
+        map<int, int> m;
+        for (int i = 0; i < nums.size(); i++) {
+            if (m.find(nums[i]) == m.end()) {
+                m[nums[i]] = 0;
+            }
+            m[nums[i]] += 1;
+        }
+        int cur = 0;
+        for (auto iter = m.begin(); iter != m.end(); iter++) {
+            for (int i = 0; i < iter->second; i++) {
+                nums[cur++] = iter->first;
+            }
+        }
+    }
 };
