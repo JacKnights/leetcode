@@ -380,6 +380,19 @@ class TreeSolution {
         return res;
     }
 
+    // 141. Linked List Cycle
+    // Given head, the head of a linked list, determine if the linked list has a cycle in it.
+    bool hasCycle(ListNode *head) {
+        ListNode *walker = head;
+        ListNode *runner = head;
+        while (runner != NULL && runner->next != NULL) {
+            walker = walker->next;
+            runner = runner->next->next;
+            if (walker == runner) return true;
+        }
+        return false;
+    }
+
     // 21. Merge Two Sorted Lists
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
         if (list1 == nullptr) {

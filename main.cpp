@@ -439,6 +439,16 @@ int main(int argc, char *argv[]) {
         printf("maxProfit3: %d\n", s.maxProfit3(prices));
     }
 
+    if (args.find("maxProfit4") != args.end()) {
+        vector<int> prices;
+
+        prices = {2,4,1};
+        printf("maxProfit4: %d\n", s.maxProfit4(2, prices));
+
+        prices = {3,2,6,5,0,3};
+        printf("maxProfit4: %d\n", s.maxProfit4(2, prices));
+    }
+
     if (args.find("canJump") != args.end()) {
         vector<int> nums;
 
