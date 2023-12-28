@@ -195,17 +195,19 @@ class TreeSolution {
         return ans;
     }
 
-    TreeNode* buildTreeHelper(map<int, int>& in_idx, vector<int>& preorder, int r, int len, vector<int>& inorder, int st, int ed) {
+    TreeNode* buildTreeHelper(unordered_map<int, int>& in_idx, vector<int>& preorder, int r, int len, vector<int>& inorder, int st, int ed) {
         if (len == 0) {
             return NULL;
         }
         int mid = in_idx[preorder[r]];
         TreeNode* res =
-            new TreeNode(preorder[r], buildTreeHelper(in_idx, preorder, r + 1, mid - st, inorder, st, mid), buildTreeHelper(in_idx, preorder, r + 1 + mid - st, ed - (mid + 1), inorder, mid + 1, ed));
+            new TreeNode(preorder[r],
+            buildTreeHelper(in_idx, preorder, r + 1, mid - st, inorder, st, mid),
+            buildTreeHelper(in_idx, preorder, r + 1 + mid - st, ed - (mid + 1), inorder, mid + 1, ed));
         return res;
     }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        map<int, int> in_idx;
+        unordered_map<int, int> in_idx;
         for (int i = 0; i < inorder.size(); i++) {
             in_idx[inorder[i]] = i;
         }
