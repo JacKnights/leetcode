@@ -4,7 +4,8 @@
 #include <random>
 using namespace std;
 
-using SortingFunc = void(*) (std::vector<int>&);
+// using SortingFunc = void(*) (vector<int>&);
+typedef void(*SortingFunc) (vector<int>&);
 
 void bubbleSort(vector<int>& arr) {
     int n = arr.size();
