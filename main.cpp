@@ -8,6 +8,7 @@
 #include <vector>
 #include "code.cpp"
 #include "dp_code.cpp"
+#include "list_code.cpp"
 #include "tree_code.cpp"
 #include "lru_cache.cpp"
 #include "range_sum.cpp"
@@ -15,7 +16,7 @@
 
 using namespace std;
 
-class MainSolution: public Solution, public DPSolution, public TreeSolution {
+class MainSolution: public Solution, public DPSolution, public TreeSolution, public LinkedListSolution {
 
 };
 
