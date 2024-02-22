@@ -78,6 +78,15 @@ class TreeSolution {
         return res;
     }
 
+    // 655. Print Binary Tree
+    // Given the root of a binary tree, construct a 0-indexed m x n string matrix res that represents a formatted layout of the tree. The formatted layout matrix should be constructed using the following rules:
+    // The height of the tree is height and the number of rows m should be equal to height + 1.
+    // The number of columns n should be equal to 2height+1 - 1.
+    // Place the root node in the middle of the top row (more formally, at location res[0][(n-1)/2]).
+    // For each node that has been placed in the matrix at position res[r][c], place its left child at res[r+1][c-2height-r-1] and its right child at res[r+1][c+2height-r-1].
+    // Continue this process until all the nodes in the tree have been placed.
+    // Any empty cells should contain the empty string "".
+    // Return the constructed matrix res.
     vector<vector<string>> printTree(TreeNode* root) {
         int rows = maxDepth(root);
         int cols = pow(2, rows) - 1;
@@ -108,6 +117,52 @@ class TreeSolution {
         return res;
     }
 
+    // 110. Balanced Binary Tree
+    // Given a binary tree, determine if it is height-balanced.
+    // bool isBalanced(TreeNode* root) {
+    //     stack<pair<TreeNode*, int>> st;
+    //     TreeNode* cur = root;
+    //     int lower = 0, upper = 0;
+    //     int cur_height = 0;
+    //     while (cur || !st.empty()) {
+    //         while (cur) {
+    //             cur_height++;
+    //             st.push(make_pair(cur, cur_height));
+    //             if (!cur->left || !cur->right) { // leaf node
+    //                 if (lower == 0) { // init
+    //                     lower = cur_height;
+    //                     upper = cur_height;
+    //                 } else if (upper - 1 > cur_height) { // too short
+    //                     return false;
+    //                 } else if (lower + 1 < cur_height) { // too long
+    //                     return false;
+    //                 } else {
+    //                     lower = min(lower, cur_height);
+    //                     upper = max(upper, cur_height);
+    //                 }
+    //             }
+    //             cur = cur->left;
+    //         }
+    //         cur = st.top().first->right;
+    //         cur_height = st.top().second;
+    //         st.pop();
+    //     }
+    //     return true;
+    // }
+	int height(TreeNode* root) {
+		if (root == NULL)  return 0; // Base case...
+		int left_height = height(root->left);
+		int right_height = height(root->right);
+        // In case of left subtree or right subtree unbalanced or their heights differ by more than ‘1’, return -1...
+		if (left_height == -1 || right_height == -1 || abs(left_height - right_height) > 1)  return -1;
+        // Otherwise, return the height of this subtree as max(left_height, right_height) + 1...
+		return max(left_height, right_height) + 1;
+    }
+    bool isBalanced(TreeNode* root) {
+        // will return -1, when it’s an unbalanced tree...
+		return height(root) != -1;
+	}
+
     bool isSameTree(TreeNode* p, TreeNode* q) {
         stack<TreeNode*> st0;
         stack<TreeNode*> st1;
@@ -136,6 +191,80 @@ class TreeSolution {
             cur1 = cur1->right;
         }
         return true;
+    }
+
+    // 226. Invert Binary Tree
+    // Given the root of a binary tree, invert the tree, and return its root.
+    TreeNode* invertTree(TreeNode* root) {
+        if (!root) return nullptr;
+        TreeNode* left = invertTree(root->left);
+        TreeNode* right = invertTree(root->right);
+        root->left = right;
+        root->right = left;
+        return root;
+    }
+
+    // 257. Binary Tree Paths
+    // Given the root of a binary tree, return all root-to-leaf paths in any order.
+    // A leaf is a node with no children.
+    vector<string> binaryTreePaths(TreeNode* root) {
+        stack<pair<TreeNode*, string>> st;
+        TreeNode* cur = root;
+        string cur_str;
+        vector<string> res;
+        while (cur || !st.empty()) {
+            while (cur) {
+                cur_str = cur_str + to_string(cur->val) + "->";
+                st.push(make_pair(cur, cur_str));
+                cur = cur->left;
+            }
+            TreeNode* tmp = st.top().first;
+            string tmp_str = st.top().second;
+            if (!tmp->left && !tmp->right) { // leaf node
+                res.push_back(tmp_str.substr(0, tmp_str.size() - 2));
+            }
+            cur = tmp->right;
+            cur_str = tmp_str;
+            st.pop();
+        }
+        return res;
+    }
+
+    // 563. Binary Tree Tilt
+    // Given the root of a binary tree, return the sum of every tree node's tilt.
+    // The tilt of a tree node is the absolute difference between the sum of all left subtree node values and all right subtree node values. If a node does not have a left child, then the sum of the left subtree node values is treated as 0. The rule is similar if the node does not have a right child.
+    int sum(TreeNode* root, int& tilt) {
+        if (!root) return 0;
+        int left_sum = sum(root->left, tilt);
+        int right_sum = sum(root->right, tilt);
+        tilt += abs(left_sum - right_sum);
+        return left_sum + right_sum + root->val;
+    }
+    int findTilt(TreeNode* root) {
+        int tilt = 0;
+        sum(root, tilt);
+        return tilt;
+    }
+
+    // 654. Maximum Binary Tree
+    // You are given an integer array nums with no duplicates. A maximum binary tree can be built recursively from nums using the following algorithm:
+    // Create a root node whose value is the maximum value in nums.
+    // Recursively build the left subtree on the subarray prefix to the left of the maximum value.
+    // Recursively build the right subtree on the subarray suffix to the right of the maximum value.
+    // Return the maximum binary tree built from nums.
+    TreeNode* doConstructMaximum(vector<int>& nums, int left, int right) {
+        if (left == right) return nullptr;
+        int max_val = nums[left], max_idx = left;
+        for (int i = left + 1; i < right; i++) {
+            if (nums[i] > max_val) {
+                max_val = nums[i];
+                max_idx = i;
+            }
+        }
+        return new TreeNode(max_val, doConstructMaximum(nums, left, max_idx), doConstructMaximum(nums, max_idx + 1, right));
+    }
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        return doConstructMaximum(nums, 0, nums.size());
     }
 
     vector<int> preorderTraversal(TreeNode* root) {
@@ -215,6 +344,7 @@ class TreeSolution {
     }
 
     // 95. Unique Binary Search Trees II
+    // Given an integer n, return all the structurally unique BST's (binary search trees), which has exactly n nodes of unique values from 1 to n. Return the answer in any order.
     vector<TreeNode*> generateTreesHelper(int st, int ed) {
         if (st > ed) {
             return {NULL};

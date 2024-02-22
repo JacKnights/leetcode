@@ -768,4 +768,49 @@ int main(int argc, char *argv[]) {
         vec = {{5,5,5,1},{5,1,1,5},{5,1,5,5},{5,2,5,8}};
         printf("trapRainWater: %d\n", s.trapRainWater(vec));
     }
+
+    if (args.find("isBalanced") != args.end()) {
+        printf("isBalanced: %d\n", s.isBalanced(new TreeNode(1)));
+        printf("isBalanced: %d\n", s.isBalanced(new TreeNode(1, nullptr, new TreeNode(2))));
+        printf("isBalanced: %d\n", s.isBalanced(new TreeNode(1, new TreeNode(2, new TreeNode(3), nullptr), nullptr)));
+        printf("isBalanced: %d\n", s.isBalanced(new TreeNode(1, nullptr, new TreeNode(2, nullptr, new TreeNode(3)))));
+        printf("isBalanced: %d\n", s.isBalanced(new TreeNode(1, new TreeNode(2, new TreeNode(3), new TreeNode(4)), nullptr)));
+        printf("isBalanced: %d\n", s.isBalanced(new TreeNode(1, new TreeNode(2, new TreeNode(3), nullptr), new TreeNode(4))));
+        printf("isBalanced: %d\n", s.isBalanced(new TreeNode(1, new TreeNode(2, new TreeNode(4, new TreeNode(8), nullptr), new TreeNode(5)), new TreeNode(3, new TreeNode(6), nullptr))));
+    }
+
+    if (args.find("binaryTreePaths") != args.end()) {
+        printVectorString(s.binaryTreePaths(new TreeNode(1)));
+        printVectorString(s.binaryTreePaths(new TreeNode(1, nullptr, new TreeNode(2))));
+        printVectorString(s.binaryTreePaths(new TreeNode(1, new TreeNode(2, new TreeNode(3), nullptr), nullptr)));
+        printVectorString(s.binaryTreePaths(new TreeNode(1, nullptr, new TreeNode(2, nullptr, new TreeNode(3)))));
+        printVectorString(s.binaryTreePaths(new TreeNode(1, new TreeNode(2, new TreeNode(3), new TreeNode(4)), nullptr)));
+        printVectorString(s.binaryTreePaths(new TreeNode(1, new TreeNode(2, new TreeNode(3), nullptr), new TreeNode(4))));
+        printVectorString(s.binaryTreePaths(new TreeNode(1, new TreeNode(2, new TreeNode(4, new TreeNode(8), nullptr), new TreeNode(5)), new TreeNode(3, new TreeNode(6), nullptr))));
+    }
+
+    if (args.find("findTilt") != args.end()) {
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1)));
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1, nullptr, new TreeNode(2))));
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1, new TreeNode(3), new TreeNode(2))));
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1, new TreeNode(2, new TreeNode(3), nullptr), nullptr)));
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1, nullptr, new TreeNode(2, nullptr, new TreeNode(3)))));
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1, new TreeNode(2, new TreeNode(3), new TreeNode(4)), nullptr)));
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1, new TreeNode(2, new TreeNode(3), nullptr), new TreeNode(4))));
+        printf("findTilt: %d\n", s.findTilt(new TreeNode(1, new TreeNode(2, new TreeNode(4, new TreeNode(8), nullptr), new TreeNode(5)), new TreeNode(3, new TreeNode(6), nullptr))));
+    }
+
+    if (args.find("constructMaximumBinaryTree") != args.end()) {
+        {
+            vector<int> nums = {3, 2, 1};
+            TreeNode* res = s.constructMaximumBinaryTree(nums);
+            printVectorString2D(s.printTree(res));
+        }
+        {
+            vector<int> nums = {3,2,1,6,0,5};
+            TreeNode* res = s.constructMaximumBinaryTree(nums);
+            printVectorString2D(s.printTree(res));
+        }
+    }
+
 }

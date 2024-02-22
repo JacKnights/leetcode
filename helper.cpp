@@ -19,6 +19,10 @@ void printVectorString(vector<string> vec, int size) {
     printf("]\n");
 }
 
+void printVectorString(vector<string> vec) {
+    printVectorString(vec, vec.size());
+}
+
 void printVectorString2D(vector<vector<string>> mat) {
     printf("[\n");
     for (int i = 0; i < mat.size(); i++) {
@@ -51,6 +55,10 @@ void printVectorInt(vector<int> vec, int size) {
         printf("  %d ", vec[i]);
     }
     printf("]\n");
+}
+
+void printVectorInt(vector<int> vec) {
+    printVectorInt(vec, vec.size());
 }
 
 void printVectorInt2D(vector<vector<int>> mat) {
