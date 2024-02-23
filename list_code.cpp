@@ -98,6 +98,7 @@ public:
     }
 
     // 19. Remove Nth Node From End of List
+    // Given the head of a linked list, remove the nth node from the end of the list and return its head.
     ListNode* removeNthFromEnd(ListNode* head, int n) {
         int len = 0;
         ListNode* cur = head;
@@ -121,6 +122,7 @@ public:
     }
 
     // 61. Rotate List
+    // Given the head of a linked list, rotate the list to the right by k places.
     ListNode* rotateRight(ListNode* head, int k) {
         int len = 0;
         ListNode dummy(0, head);
@@ -141,6 +143,39 @@ public:
         ListNode* new_head = cur->next;
         cur->next = nullptr;  // break circle
         return new_head;
+    }
+
+    // 83. Remove Duplicates from Sorted List
+    // Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode* cur = head;
+        while (cur) {
+            if (cur->next && cur->val == cur->next->val) {
+                cur->next = cur->next->next;
+            } else {
+                cur = cur->next;
+            }
+        }
+        return head;
+    }
+
+    // 82. Remove Duplicates from Sorted List II
+    // Given the head of a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list. Return the linked list sorted as well.
+    ListNode* deleteDuplicates2(ListNode* head) {
+        ListNode* dummy = new ListNode(0, head);
+        ListNode* cur = dummy;
+        while (cur->next) {
+            ListNode* tmp = cur->next->next;
+            while (tmp && tmp->val == cur->next->val) {
+                tmp = tmp->next;
+            }
+            if (tmp != cur->next->next) {
+                cur->next = tmp;
+            } else {
+                cur = cur->next;
+            }
+        }
+        return dummy->next;
     }
 
     // 206. Reverse Linked List
@@ -220,5 +255,32 @@ public:
             cur1 = cur1n;
             cur2 = cur2n;
         }
+    }
+
+    // find the cross node of two linked lists
+    struct ListNode* findCross(ListNode* list1, ListNode* list2) {
+        int n1 = 0;
+        ListNode* tmp = list1;
+        while (tmp) {
+            n1++;
+            tmp = tmp->next;
+        }
+        int n2 = 0;
+        tmp = list2;
+        while (tmp) {
+            n2++;
+            tmp = tmp->next;
+        }
+        ListNode* longer = n1 > n2 ? list1 : list2;
+        ListNode* shorter = n1 <= n2 ? list1 : list2;
+        int diff = abs(n1 - n2);
+        for (int i = 0; i < diff; i++) {
+            longer = longer->next;
+        }
+        while (longer != shorter) {
+            longer = longer->next;
+            shorter = shorter->next;
+        }
+        return longer;
     }
 };

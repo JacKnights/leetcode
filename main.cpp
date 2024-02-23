@@ -814,4 +814,18 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    if (args.find("deleteDuplicates2") != args.end()) {
+        printf("deleteDuplicates2: \n");
+        ListNode* head;
+        vector<int> vec;
+        head = new ListNode(1, new ListNode(2, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(4, new ListNode(4)))))));
+        vec = s.getLinkedList(s.deleteDuplicates2(head));
+        printVectorInt(vec, vec.size());
+        head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3, new ListNode(4, new ListNode(4, new ListNode(4)))))));
+        vec = s.getLinkedList(s.deleteDuplicates2(head));
+        printVectorInt(vec, vec.size());
+        head = new ListNode(1, new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(4))))));
+        vec = s.getLinkedList(s.deleteDuplicates2(head));
+        printVectorInt(vec, vec.size());
+    }
 }
