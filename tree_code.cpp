@@ -494,4 +494,76 @@ class TreeSolution {
         }
         return root;
     }
+
+    // 207. Course Schedule
+    // There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1.
+    // You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+    // For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+    // Return true if you can finish all courses. Otherwise, return false.
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses, vector<int>(numCourses, 0));
+        vector<int> indegree(numCourses, 0);
+        for (int i = 0; i < prerequisites.size(); i++) {
+            graph[prerequisites[i][0]][prerequisites[i][1]] = 1;
+            indegree[prerequisites[i][0]]++;
+        }
+        queue<int> que;
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                que.push(i);
+            }
+        }
+        int visited = 0;
+        while (!que.empty()) {
+            int idx = que.front();
+            que.pop();
+            visited++;
+            for (int i = 0; i < numCourses; i++) {
+                if (graph[i][idx]) {
+                    indegree[i]--;
+                    if (indegree[i] == 0) {
+                        que.push(i);
+                    }
+                }
+            }
+        }
+        return visited == numCourses;
+    }
+
+    // 210. Course Schedule II
+    // There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1.
+    // You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+    // For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+    // Return the ordering of courses you should take to finish all courses. If there are many valid answers, return any of them. If it is impossible to finish all courses, return an empty array.
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        vector<int> indegree(numCourses, 0);
+        for (int i = 0; i < prerequisites.size(); i++) {
+            graph[prerequisites[i][1]].push_back(prerequisites[i][0]);
+            indegree[prerequisites[i][0]]++;
+        }
+        queue<int> que;
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                que.push(i);
+            }
+        }
+        int visited = 0;
+        vector<int> res;
+        res.reserve(numCourses);
+        while (!que.empty()) {
+            int idx = que.front();
+            que.pop();
+            visited++;
+            res.push_back(idx);
+            for (int i = 0; i < graph[idx].size(); i++) {
+                int nxt = graph[idx][i];
+                indegree[nxt]--;
+                if (indegree[nxt] == 0) {
+                    que.push(nxt);
+                }
+            }
+        }
+        return visited == numCourses ? res : vector<int>();
+    }
 };

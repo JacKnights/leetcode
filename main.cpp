@@ -828,4 +828,18 @@ int main(int argc, char *argv[]) {
         vec = s.getLinkedList(s.deleteDuplicates2(head));
         printVectorInt(vec, vec.size());
     }
+
+    if (args.find("canFinish") != args.end()) {
+        printf("canFinish: \n");
+        vector<vector<int>> G;
+        G = {{0, 1}};
+        printf("canFinish: %d\n", s.canFinish(2, G));
+        printVectorInt(s.findOrder(2, G));
+        G = {{1, 0}, {0, 1}};
+        printf("canFinish: %d\n", s.canFinish(2, G));
+        printVectorInt(s.findOrder(2, G));
+        G = {{1, 0}, {2, 1}, {3, 1}, {3, 2}, {4, 0}};
+        printf("canFinish: %d\n", s.canFinish(5, G));
+        printVectorInt(s.findOrder(5, G));
+    }
 }
