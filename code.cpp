@@ -838,6 +838,29 @@ class Solution {
         return res;
     }
 
+    // 2248. Intersection of Multiple Arrays
+    // Given a 2D integer array nums where nums[i] is a non-empty array of distinct positive integers, return the list of integers that are present in each array of nums sorted in ascending order.
+    // Constraints:
+    // 1 <= nums.length <= 1000
+    // 1 <= sum(nums[i].length) <= 1000
+    // 1 <= nums[i][j] <= 1000
+    // All the values of nums[i] are unique.
+    vector<int> intersection(vector<vector<int>>& nums) {
+        vector<int> hash(1001, 0);
+        for (int k = 0; k < nums.size(); k++) {
+            for (int i = 0; i < nums[k].size(); i++) {
+                hash[nums[k][i]]++;
+            }
+        }
+        vector<int> res;
+        for (int i = 0; i < hash.size(); i++) {
+            if (hash[i] == nums.size()) {
+                res.push_back(i);
+            }
+        }
+        return res;
+    }
+
     // 15. 3Sum
     vector<vector<int>> threeSum(vector<int>& nums) {
         sort(nums.begin(), nums.end());
