@@ -1,5 +1,6 @@
 #include <limits.h>
 #include <math.h>
+#include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -915,24 +916,21 @@ class DPSolution {
         }
         return d1[0] < d2[0];
     }
-    int maxHeight(vector<vector<int>> &cuboids) {
+    int maxHeight(vector<vector<int>>& cuboids) {
         for (int i = 0; i < cuboids.size(); i++) { // sorting each value
             sort(cuboids[i].begin(), cuboids[i].end());
         }
         sort(cuboids.begin(), cuboids.end(), comp); // sorting the array
-
-        vector<vector<int>> dp(cuboids.size() + 1, vector<int>(cuboids.size() + 1, 0));
-        for (int i = cuboids.size() - 1; i >= 0; i--) {
-            for (int j = i - 1; j >= 0; j--) {
-                if (cuboids[j][0] <= cuboids[i][0] && cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2]) {
-                    dp[i][j + 1] = max(dp[i + 1][j + 1], cuboids[i][2] + dp[i + 1][i + 1]);
-                } else {
-                    dp[i][j + 1] = dp[i + 1][j + 1];
+        vector<int> dp(cuboids.size(), 0);
+        for (int i = 0; i < cuboids.size(); i++) {
+            dp[i] = cuboids[i][2];
+            for (int j = 0; j < i; j++) {
+                if (cuboids[i][0] >= cuboids[j][0] && cuboids[i][1] >= cuboids[j][1] && cuboids[i][2] >= cuboids[j][2]) {
+                    dp[i] = max(dp[i], dp[j] + cuboids[i][2]);
                 }
             }
-            dp[i][0] = max(dp[i + 1][0], cuboids[i][2] + dp[i + 1][i + 1]);
         }
-        return dp[0][0];
+        return *std::max_element(dp.begin(), dp.end()); // 得到以任意长方体结尾的最大高度中的最大值
     }
 
     // 1547. Minimum Cost to Cut a Stick

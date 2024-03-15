@@ -757,6 +757,8 @@ int main(int argc, char *argv[]) {
         printf("maxHeight: %d\n", s.maxHeight(vec));
         vec = { { 50, 26, 84 }, { 2, 55, 62 }, { 64, 63, 72 } };
         printf("maxHeight: %d\n", s.maxHeight(vec));
+        vec = {{35,32,11},{7,6,65},{3,39,41}};
+        printf("maxHeight: %d\n", s.maxHeight(vec));
     }
 
     if (args.find("trapRainWater") != args.end()) {
@@ -841,5 +843,36 @@ int main(int argc, char *argv[]) {
         G = {{1, 0}, {2, 1}, {3, 1}, {3, 2}, {4, 0}};
         printf("canFinish: %d\n", s.canFinish(5, G));
         printVectorInt(s.findOrder(5, G));
+    }
+
+    if (args.find("findKthLargest") != args.end()) {
+        vector<int> vec;
+        vec = {3,2,1,5,6,4};
+        s.qsort(vec);
+        printVectorInt(vec);
+        vec = {3,2,3,1,2,4,5,5,6};
+        s.qsort(vec);
+        printVectorInt(vec);
+        vec = {3,2,1,5,6,4};
+        printf("findKthLargest: %d\n", s.findKthLargest(vec, 2));
+        vec = {3,2,1,5,6,4};
+        printf("findKthLargestQsort: %d\n", s.findKthLargestQsort(vec, 2));
+        vec = {3,2,3,1,2,4,5,5,6};
+        printf("findKthLargest: %d\n", s.findKthLargest(vec, 4));
+        vec = {3,2,3,1,2,4,5,5,6};
+        printf("findKthLargestQsort: %d\n", s.findKthLargestQsort(vec, 4));
+    }
+
+    if (args.find("topKFrequent") != args.end()) {
+        printf("topKFrequent: \n");
+        vector<int> vec;
+        vec = {1,1,1,2,2,3};
+        printVectorInt(s.topKFrequent(vec, 2));
+        vec = {1};
+        printVectorInt(s.topKFrequent(vec, 1));
+        vec = {3,2,3,1,2,4,5,5,6};
+        printVectorInt(s.topKFrequent(vec, 4));
+        vec = {3, 3, 2, 2, 2, 1, 5, 5, 5, 5};
+        printVectorInt(s.topKFrequent(vec, 2));
     }
 }

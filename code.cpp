@@ -691,6 +691,9 @@ class Solution {
     }
 
     // 215. Kth Largest Element in an Array
+    // Given an integer array nums and an integer k, return the kth largest element in the array.
+    // Note that it is the kth largest element in the sorted order, not the kth distinct element.
+    // Can you solve it without sorting?
     int findKthLargest(vector<int>& nums, int k) {
         const int MAX_SIZE = 20001;
         vector<int> bucket(MAX_SIZE, 0);
@@ -706,6 +709,110 @@ class Solution {
                 res = i - 10000;
                 break;
             }
+        }
+        return res;
+    }
+    int partition(vector<int>& nums, int low, int high) {
+        int x = nums[low];
+        int i = low, j = high;
+        while (i < j) {
+            while (i < j && nums[j] >= x) {
+                j--;
+            }
+            if (i < j) {
+                nums[i] = nums[j];
+            }
+            while (i < j && nums[i] <= x) {
+                i++;
+            }
+            if (i < j) {
+                nums[j] = nums[i];
+            }
+        }
+        nums[i] = x;
+        return i;
+    }
+    void doqsort(vector<int>& nums, int low, int high) {
+        if (low >= high) return;
+        int p = partition(nums, low, high);
+        doqsort(nums, low, p - 1);
+        doqsort(nums, p + 1, high);
+    }
+    void qsort(vector<int>& nums) {
+        doqsort(nums, 0, nums.size() - 1);
+    }
+    int findKthLargestQsort(vector<int>& nums, int k) {
+        int low = 0, high = nums.size() - 1;
+        int idx = nums.size() - k;
+        while (low < high) {
+            int p = partition(nums, low, high);
+            if (p == idx) {
+                return nums[p];
+            } else if (p > idx) {
+                high = p - 1;
+            } else {
+                low = p + 1;
+            }
+        }
+        return nums[low];
+    }
+
+    // 347. Top K Frequent Elements
+    // Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+    // Constraints:
+    // 1 <= nums.length <= 105
+    // -104 <= nums[i] <= 104
+    // k is in the range [1, the number of unique elements in the array].
+    // It is guaranteed that the answer is unique.
+    int partitionPair(vector<pair<int, int>>& vec, int i, int j) {
+        auto x = vec[i];
+        while (i < j) {
+            while (i < j && vec[j].second >= x.second) {
+                j--;
+            }
+            if (i < j) {
+                vec[i] = vec[j];
+            }
+            while (i < j && vec[i].second <= x.second) {
+                i++;
+            }
+            if (i < j) {
+                vec[j] = vec[i];
+            }
+        }
+        vec[i] = x;
+        return i;
+    }
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        map<int, int> frequency; // count frequency
+        for (int i = 0; i < nums.size(); i++) {
+            if (frequency.find(nums[i]) == frequency.end()) {
+                frequency[nums[i]] = 0;
+            }
+            frequency[nums[i]]++;
+        }
+        vector<pair<int, int>> vec;
+        vec.reserve(frequency.size());
+        for (auto iter = frequency.begin(); iter != frequency.end(); iter++) {
+            vec.push_back(make_pair(iter->first, iter->second));
+        }
+        int n = vec.size();
+        int low = 0, high = n - 1;
+        int revert_k = n - k; // revert
+        while (low < high) {
+            int p = partitionPair(vec, low, high); // left smaller, right larger
+            if (p == revert_k) {
+                break;
+            } else if (p > revert_k) {
+                high = p - 1;
+            } else {
+                low = p + 1;
+            }
+        }
+        vector<int> res;
+        res.reserve(k);
+        for (int i = 0; i < k; i++) {
+            res.push_back(vec[n - 1 - i].first);
         }
         return res;
     }
