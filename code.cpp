@@ -784,7 +784,7 @@ class Solution {
         return i;
     }
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        map<int, int> frequency; // count frequency
+        unordered_map<int, int> frequency; // count frequency
         for (int i = 0; i < nums.size(); i++) {
             if (frequency.find(nums[i]) == frequency.end()) {
                 frequency[nums[i]] = 0;
@@ -813,6 +813,27 @@ class Solution {
         res.reserve(k);
         for (int i = 0; i < k; i++) {
             res.push_back(vec[n - 1 - i].first);
+        }
+        return res;
+    }
+
+    // 349. Intersection of Two Arrays
+    // Given two integer arrays nums1 and nums2, return an array of their intersection.
+    // Each element in the result must be unique and you may return the result in any order.
+    // Constraints:
+    // 1 <= nums1.length, nums2.length <= 1000
+    // 0 <= nums1[i], nums2[i] <= 1000
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> hash(1001, 0);
+        for (int i = 0; i < nums1.size(); i++) {
+            hash[nums1[i]] = 1;
+        }
+        vector<int> res;
+        for (int i = 0; i < nums2.size(); i++) {
+            if (hash[nums2[i]]) {
+                hash[nums2[i]] = 0;
+                res.push_back(nums2[i]);
+            }
         }
         return res;
     }
