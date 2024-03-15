@@ -838,6 +838,63 @@ class Solution {
         return res;
     }
 
+    // 350. Intersection of Two Arrays II
+    // Given two integer arrays nums1 and nums2, return an array of their intersection.
+    // Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> hash1(1001, 0), hash2(1001, 0);
+        for (int i = 0; i < nums1.size(); i++) {
+            hash1[nums1[i]]++;
+        }
+        for (int i = 0; i < nums2.size(); i++) {
+            hash2[nums2[i]]++;
+        }
+        vector<int> res;
+        for (int i = 0; i < hash1.size(); i++) {
+            if (hash1[i] > 0 && hash2[i] > 0) {
+                for (int j = 0; j < min(hash1[i], hash2[i]); j++) {
+                    res.push_back(i);
+                }
+            }
+        }
+        return res;
+    }
+
+    // 2215. Find the Difference of Two Arrays
+    // Given two 0-indexed integer arrays nums1 and nums2, return a list answer of size 2 where:
+    // answer[0] is a list of all distinct integers in nums1 which are not present in nums2.
+    // answer[1] is a list of all distinct integers in nums2 which are not present in nums1.
+    // Note that the integers in the lists may be returned in any order.
+    // Constraints:
+    // 1 <= nums1.length, nums2.length <= 1000
+    // -1000 <= nums1[i], nums2[i] <= 1000
+    vector<vector<int>> findDifference(vector<int>& nums1, vector<int>& nums2) {
+        int n = 2001;
+        vector<int> hash1(n, 0), hash2(n, 0);
+        for (int i = 0; i < nums1.size(); i++) {
+            hash1[nums1[i] + 1000] = 1;
+        }
+        for (int i = 0; i < nums2.size(); i++) {
+            hash2[nums2[i] + 1000] = 1;
+        }
+        for (int i = 0; i < nums2.size(); i++) {
+            hash1[nums2[i] + 1000] = 0;
+        }
+        for (int i = 0; i < nums1.size(); i++) {
+            hash2[nums1[i] + 1000] = 0;
+        }
+        vector<vector<int>> res(2);
+        for (int i = 0; i < n; i++) {
+            if (hash1[i]) {
+                res[0].push_back(i - 1000);
+            }
+            if (hash2[i]) {
+                res[1].push_back(i - 1000);
+            }
+        }
+        return res;
+    }
+
     // 2248. Intersection of Multiple Arrays
     // Given a 2D integer array nums where nums[i] is a non-empty array of distinct positive integers, return the list of integers that are present in each array of nums sorted in ascending order.
     // Constraints:
