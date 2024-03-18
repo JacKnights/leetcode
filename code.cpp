@@ -428,41 +428,35 @@ class Solution {
         return binsearch(nums, 0, len, target);
     }
 
-    // search in range
-    vector<int> binsearchRange(vector<int>& nums, int st, int ed, int target) {
-        int len = ed - st;
-        if (len == 0) {
-            return {-1, -1};
-        }
-        if (len == 1) {
-            return (nums[st] == target) ? (vector<int>){st, st} : (vector<int>){-1, -1};
-        }
-        int mid = st + len / 2;
-        if (nums[mid] > target) {
-            return binsearchRange(nums, st, mid, target);
-        } else if (nums[mid] < target) {
-            return binsearchRange(nums, mid, ed, target);
-        } else {
-            vector<int> res{mid, mid};
-            for (int i = mid - 1; i >= st; i--) {
-                if (nums[i] != target) {
-                    break;
-                }
-                res[0] = i;
-            }
-            for (int i = mid + 1; i < ed; i++) {
-                if (nums[i] != target) {
-                    break;
-                }
-                res[1] = i;
-            }
-            return res;
-        }
-    }
     // 34. Find First and Last Position of Element in Sorted Array
+    // Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
+    // If target is not found in the array, return [-1, -1].
+    // You must write an algorithm with O(log n) runtime complexity.
+    int getBound(vector<int>& nums, int target, int low, int high, bool upper) {
+        int mid = (low + high) / 2;
+        int ans = -1;
+        while (low < high) {
+            if (target == nums[mid]) {
+                ans = mid;
+                if (!upper) {
+                    high = mid;
+                } else {
+                    low = mid + 1;
+                }
+            } else if (target < nums[mid]) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+            mid = (low + high) / 2;
+        }
+        return ans;
+    }
     vector<int> searchRange(vector<int>& nums, int target) {
-        int len = nums.size();
-        return binsearchRange(nums, 0, len, target);
+        int lower_bound = getBound(nums, target, 0, nums.size(), false);
+        if (lower_bound == -1) return {-1, -1};
+        int upper_bound = getBound(nums, target, lower_bound, nums.size(), true);
+        return {lower_bound, upper_bound};
     }
 
     int binsearchInsert(vector<int>& nums, int st, int ed, int target) {
